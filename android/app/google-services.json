@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "730612281255",
+    "project_id": "timetable-smartapp",
+    "storage_bucket": "timetable-smartapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730612281255:android:fd4ea74ab3703309a5d082",
+        "android_client_info": {
+          "package_name": "com.example.smartapp_project24"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6nID1LbFqiZIEkzznwe0C4ya64YuSLy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
