@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Login Page',
                   style: TextStyle(fontSize: 24),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 75),
                 //? Email input
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
