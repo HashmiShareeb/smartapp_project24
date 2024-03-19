@@ -16,7 +16,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Home'),
         //hide back arrow
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
+
         actions: [
           IconButton(
             onPressed: () {
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Center(
-        child: Text('Welcome to the home page ${user?.email}'),
+        child: Text('Welcome, ${user?.displayName ?? user?.email}'),
       ),
     );
   }
