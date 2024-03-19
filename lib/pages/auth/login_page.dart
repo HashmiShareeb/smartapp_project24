@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smartapp_project24/pages/home_page.dart';
+import 'package:smartapp_project24/pages/auth/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:smartapp_project24/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smartapp_project24/pages/auth/register_page.dart';
+import 'package:smartapp_project24/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const HomePage(),
+              builder: (context) => const MainPage(),
             ),
           );
         }
@@ -139,6 +141,24 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterPage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Not registered? Sign up',
+                    style: TextStyle(
+                      color: Colors.teal,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
