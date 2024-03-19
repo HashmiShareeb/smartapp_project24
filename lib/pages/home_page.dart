@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,10 +15,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text('Home'),
         //hide back arrow
         automaticallyImplyLeading: false,
-
         actions: [
           IconButton(
             onPressed: () {
@@ -28,12 +28,39 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Text('Welcome, ${user?.displayName ?? user?.email}'),
+      body: Container(
+        color: Colors.teal,
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  child: RichText(
+                      text: TextSpan(
+                    text: 'Welcome ',
+                    style: TextStyle(
+                      color: Colors.teal[900],
+                      fontSize: 20,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: user?.displayName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[100],
+                        ),
+                      ),
+                    ],
+                  )),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-
-// child: 
+// child:

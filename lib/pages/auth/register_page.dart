@@ -35,6 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text,
       );
       if (credentials.user != null) {
+        await credentials.user!.updateDisplayName(_nameController.text);
         Navigator.push(
           context,
           MaterialPageRoute(
