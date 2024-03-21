@@ -162,6 +162,25 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                //text button for guests (temporary)
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Continue as guest',
+                    style: TextStyle(
+                      color: Colors.teal,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

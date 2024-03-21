@@ -132,12 +132,31 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    //register
-                    register();
-                  },
-                  child: const Text('Register'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: ElevatedButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: Size(double.infinity, 0),
+                    ),
+                    onPressed: () {
+                      //register
+                      register();
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(
+                        fontSize: 16,
+                        backgroundColor: Colors.teal,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextButton(
