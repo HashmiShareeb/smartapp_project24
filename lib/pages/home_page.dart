@@ -32,9 +32,6 @@ class _HomePageState extends State<HomePage> {
     TimetableItem(
         courseName: 'Backend devolopment', time: '9:45 AM - 11:15 AM'),
     TimetableItem(courseName: 'User Experience', time: '11:30 AM - 1:00 PM'),
-    TimetableItem(courseName: 'AI', time: '1:30 PM - 3:00 PM'),
-    TimetableItem(courseName: 'Scripting', time: '3:15 PM - 4:45 PM'),
-    TimetableItem(courseName: 'Networking', time: '5:00 PM - 6:30 PM'),
     TimetableItem(courseName: 'Database', time: '6:45 PM - 8:15 PM'),
     TimetableItem(courseName: 'Cyber Security', time: '8:30 PM - 10:00 PM'),
   ];
@@ -46,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         foregroundColor: Colors.teal[800],
-        backgroundColor: Colors.tealAccent[100],
+        backgroundColor: const Color.fromARGB(255, 200, 240, 238),
         title: Text(
           'Welcome ${user?.displayName ?? 'Guest'}!',
           style: TextStyle(
@@ -80,12 +77,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: Column(
-          //color teal
-
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              color: Colors.tealAccent[100],
+              color: const Color.fromARGB(255, 200, 240, 238),
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -100,14 +95,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                     style: TextStyle(
                       color: Colors.teal[800],
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: '\n' +
-                            DateFormat('d MMM').format(
-                              DateTime.now(),
-                            ),
+                        text: '\n${DateFormat('d MMM').format(
+                          DateTime.now(),
+                        )}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.teal[800],
@@ -118,9 +112,24 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                'Today\'s Classes: $countClasses',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 itemCount: timetableItems.length,
+                separatorBuilder: (context, index) => SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final item = timetableItems[index];
                   return ListTile(
@@ -131,16 +140,30 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                       ),
                     ),
+                    // You can add more styling here
+                    style: ListTileStyle.list,
+                    // Subtitle styling
                     subtitle: Text(
                       item.time,
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
+                        color: Colors.grey,
                       ),
                     ),
-                    // You can add more styling here
-                    // onTap: () {
-                    //   // Handle tap event
-                    // },
+
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.teal[800],
+                    ),
+                    // Tile background color
+                    // tileColor: Colors.tealAccent[100],
+                    // Content padding
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    onTap: () {
+                      // Handle tap event
+                      print('Tapped on ${item.courseName}');
+                    },
                   );
                 },
               ),
@@ -151,15 +174,15 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_filled),
             label: 'Home',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.search),
-          //   label: 'Search',
-          // ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.add_box_sharp),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
             label: 'User',
           ),
         ],
@@ -172,4 +195,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
