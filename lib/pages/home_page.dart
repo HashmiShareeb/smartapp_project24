@@ -4,6 +4,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smartapp_project24/pages/course_page.dart';
+import 'package:smartapp_project24/pages/profiles_page.dart';
+import 'package:smartapp_project24/pages/tasks_page.dart';
 
 class TimetableItem {
   final String courseName;
@@ -39,13 +42,28 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     int countClasses = timetableItems.length;
+    int _selectedIndex = 0;
+
+    void _onItemTapped(int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
+    List<Widget> _widgetOptions = <Widget>[
+      HomePage(),
+      CoursePage(),
+      TasksPage(),
+      ProfilePage(),
+    ];
+
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      // backgroundColor: Colors.grey[200],
       appBar: AppBar(
         foregroundColor: Colors.teal[800],
-        backgroundColor: const Color.fromARGB(255, 200, 240, 238),
+        backgroundColor: Colors.white,
         title: Text(
-          'Welcome ${user?.displayName ?? 'Guest'}!',
+          'Hello, ${user?.displayName ?? 'Guest'}!',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -80,7 +98,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              color: const Color.fromARGB(255, 200, 240, 238),
+              // color: Colors.white,
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -88,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                   horizontal: 20.0,
                 ),
                 child: RichText(
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                   text: TextSpan(
                     text: DateFormat('EEEE').format(
                       DateTime.now(),
@@ -99,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: '\n${DateFormat('d MMM').format(
+                        text: '\n${DateFormat('d MMMM').format(
                           DateTime.now(),
                         )}',
                         style: TextStyle(
@@ -171,27 +189,66 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CoursePage()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TasksPage()),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+              break;
+          }
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_sharp),
-            label: 'Add',
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            label: 'My courses',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'User',
+          NavigationDestination(
+            icon: Icon(Icons.task_alt_outlined),
+            label: 'Tasks',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_4_outlined),
+            label: 'Profile',
           ),
         ],
-        currentIndex: 0,
-        selectedItemColor: Colors.teal,
-        onTap: (int index) {
-          // Handle navigation
-        },
       ),
+
+      //   backgroundColor: Colors.teal,
+      //   onPressed: () {
+      //     // Add new class
+      //   },
+      //   child: const Icon(Icons.add),
+      //   tooltip: 'Add Activity',
+      // ),
     );
   }
 }
