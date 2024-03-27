@@ -18,27 +18,41 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         title: const Text('profile'),
       ),
-      body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Firebase details
-          // Add your Firebase details here
-          // User's name
-          Text('Name: ${user?.displayName ?? 'Guest'}'),
-          // User's email
-          Text('Email: ${user?.email ?? 'Not available'}'),
-          // User's phone number
+      body: Expanded(
+          child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Firebase details
+            // Add your Firebase details here
+            // User's name
+            Text(
+              'Name: ${user?.displayName ?? 'Guest'}',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // User's email
+            Text(
+              'Email: ${user?.email ?? 'Not available'}',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            // User's phone number
 
-          // Logout button
-          ElevatedButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            child: const Text('Logout'),
-          ),
-        ],
+            // Logout button
+            ElevatedButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        ),
       )),
     );
   }
