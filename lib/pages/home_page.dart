@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
       body: _selectedIndex == 0
           ? DayView(
               dateStringBuilder: (date, {secondaryDate}) =>
-                  DateFormat('d /MMMM / yyyy').format(date),
+                  DateFormat('d MMMM yyyy').format(date),
             )
           : _selectedIndex == 1
               ? CoursePage()
