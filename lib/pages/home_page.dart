@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:smartapp_project24/pages/course_page.dart';
 import 'package:smartapp_project24/pages/profiles_page.dart';
 import 'package:smartapp_project24/pages/tasks_page.dart';
+import 'package:smartapp_project24/pages/timetable_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -49,51 +50,51 @@ class _HomePageState extends State<HomePage> {
                     )
                   : null,
               actions: [
-                if (user?.displayName != null)
-                  IconButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                      print("logged out ${user?.email}");
-                    },
-                    icon: const Icon(Icons.logout),
+                //filter button
+                IconButton(
+                  onPressed: () {
+                    //
+                  },
+                  icon: Icon(
+                    Icons.filter_alt_outlined,
                     color: Colors.teal[800],
                   ),
+                ),
               ],
             )
           : null,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (int index) {
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (int index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-        selectedItemColor: Colors.teal[800],
-        unselectedItemColor: Colors.grey[400],
-        items: const [
-          BottomNavigationBarItem(
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
             label: 'My courses',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.task_alt_outlined),
+            selectedIcon: Icon(Icons.task_alt),
             label: 'Tasks',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
       ),
       body: _selectedIndex == 0
-          ? DayView(
-              dateStringBuilder: (date, {secondaryDate}) =>
-                  DateFormat('d MMMM yyyy').format(date),
-            )
+          ? TimeTableData()
           : _selectedIndex == 1
               ? CoursePage()
               : _selectedIndex == 2

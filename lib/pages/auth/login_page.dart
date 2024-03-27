@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/pages/auth/auth_page.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:smartapp_project24/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smartapp_project24/pages/auth/register_page.dart';
 import 'package:smartapp_project24/pages/home_page.dart';

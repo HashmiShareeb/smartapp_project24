@@ -44,7 +44,7 @@ List<CalendarEventData> _events = [
   CalendarEventData(
     //firestore
     date: _now,
-    startTime: DateTime(_now.year, _now.month, _now.day, 10),
+    startTime: DateTime(_now.year, _now.month, _now.day, 8),
     endTime: DateTime(_now.year, _now.month, _now.day, 12),
     title: "Chemistry Viva",
     description: "Today is Joe's birthday.",
