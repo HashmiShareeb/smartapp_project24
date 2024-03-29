@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smartapp_project24/pages/auth/register_page.dart';
 import 'package:smartapp_project24/pages/home_page.dart';
 
+import '../../widgets/email_field.dart';
+import '../../widgets/password_field.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -74,45 +77,14 @@ class _LoginPageState extends State<LoginPage> {
                 //!Email input
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      hintText: 'Email',
-                      fillColor: Colors.white,
-                      filled: true,
-                    ),
-                  ),
+                  child: EmailField(emailController: _emailController),
                 ),
                 SizedBox(height: 10),
 
                 //!Password input
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      hintText: 'Password',
-                      fillColor: Colors.white,
-                      filled: true,
-                    ),
-                  ),
+                  child: PasswordField(passwordController: _passwordController),
                 ),
                 const SizedBox(height: 20),
                 //? Login button

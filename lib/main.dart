@@ -40,6 +40,26 @@ class MainApp extends StatelessWidget {
   }
 }
 
+// Define your custom eventFilter function
+Future<bool> yourEventFilterFunction<T>(CalendarEventData<T> event) async {
+  // Implement your logic here
+  // Return true to include the event or false to exclude it
+
+  return true;
+}
+
+// Define your custom eventSorter function
+Future<int> yourEventSorterFunction<T>(
+  CalendarEventData<T> event1,
+  CalendarEventData<T> event2,
+) async {
+  // Implement your logic here
+  // Return a negative value if event1 should come before event2,
+  // a positive value if event1 should come after event2,
+  // or zero if they are considered equal
+  return 0;
+}
+
 List<CalendarEventData> _events = [
   CalendarEventData(
     //firestore

@@ -18,8 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         title: const Text('profile'),
       ),
-      body: Expanded(
-          child: Center(
+      body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +42,9 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             // User's phone number
-
+            SizedBox(
+              height: 10,
+            ),
             // Logout button
             ElevatedButton(
               onPressed: () {
@@ -53,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
-      )),
+      ),
     );
   }
 }
