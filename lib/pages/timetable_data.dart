@@ -1,6 +1,7 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smartapp_project24/pages/event_form.dart';
 
 class TimeTableData extends StatefulWidget {
   const TimeTableData({Key? key}) : super(key: key);
@@ -76,6 +77,20 @@ class _TimeTableDataState extends State<TimeTableData> {
                 MonthView(
                   dateStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('MMMM yyyy').format(date),
+                  minMonth: DateTime(1990),
+                  maxMonth: DateTime(2100),
+                  initialMonth: DateTime.now(),
+                  cellAspectRatio: 1,
+                  onPageChange: (date, pageIndex) => print("$date, $pageIndex"),
+                  onCellTap: (events, date) {
+                    // Implement callback when user taps on a cell.
+                    print(events);
+                  },
+                  startDay:
+                      WeekDays.monday, // To change the first day of the week.
+                  // This callback will only work if cellBuilder is null.
+                  onEventTap: (event, date) => print(event),
+                  onDateLongPress: (date) => print(date),
                 ),
               ],
             ),
@@ -83,17 +98,31 @@ class _TimeTableDataState extends State<TimeTableData> {
         ],
       ),
       //plus button to add new timetable item eventcontroller
+
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final event = CalendarEventData(
-            date: DateTime(2024, 3, 30),
-            event: "Event 1",
-            title: 'event 1',
-            description: 'event 1 description',
-            startTime: DateTime(2024, 3, 30, 8),
-            endTime: DateTime(2024, 3, 30, 10),
+        onPressed: () async {
+          // Navigate to the EventFormPage and wait for the result
+          final event = await Navigator.push<CalendarEventData>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EventFormPage(),
+            ),
           );
-          CalendarControllerProvider.of(context).controller.add(event);
+
+          // If an event was returned, add it to the EventController
+          if (event != null) {
+            CalendarControllerProvider.of(context).controller.add(event);
+          }
+
+          // final event = CalendarEventData(
+          //   date: DateTime.now(),
+          //   event: "Event 1",
+          //   title: 'event 1',
+          //   description: 'event 1 description',
+          //   startTime: DateTime(2024, 3, 30, 8),
+          //   endTime: DateTime(2024, 3, 30, 10),
+          // );
+          // CalendarControllerProvider.of(context).controller.add(event);
         },
         child: const Icon(Icons.add),
         shape: CircleBorder(),
