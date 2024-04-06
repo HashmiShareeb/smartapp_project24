@@ -66,13 +66,16 @@ class _TimeTableDataState extends State<TimeTableData> {
                 DayView(
                   dateStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
+
                   // Add your Firebase details here
+
                   // User's name
                   //timeTableItems
                 ),
                 WeekView(
                   headerStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
+                  startDay: WeekDays.monday,
                 ),
                 MonthView(
                   dateStringBuilder: (date, {secondaryDate}) =>
@@ -131,24 +134,24 @@ class _TimeTableDataState extends State<TimeTableData> {
   }
 }
 
-class TimetableItem extends StatelessWidget {
-  final String courseName;
-  final String time;
+// class TimetableItem extends StatelessWidget {
+//   final String courseName;
+//   final String time;
 
-  const TimetableItem({
-    Key? key,
-    required this.courseName,
-    required this.time,
-  }) : super(key: key);
+//   const TimetableItem({
+//     Key? key,
+//     required this.courseName,
+//     required this.time,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: ListTile(
-        title: Text(courseName),
-        subtitle: Text(time),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+//       child: ListTile(
+//         title: Text(courseName),
+//         subtitle: Text(time),
+//       ),
+//     );
+//   }
+// }

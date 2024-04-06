@@ -27,8 +27,8 @@ class _HomePageState extends State<HomePage> {
       // backgroundColor: Colors.grey[200],
       appBar: _selectedIndex == 0
           ? AppBar(
-              foregroundColor: Colors.teal[800],
-              backgroundColor: Colors.white,
+              foregroundColor: Colors.teal[500],
+              backgroundColor: Colors.teal[50],
               title: Text(
                 'Hello, ${user?.displayName ?? 'Guest'}!',
                 style: TextStyle(
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       icon: Icon(
                         Icons.arrow_back_ios_new_rounded,
-                        color: Colors.teal[800],
+                        color: Colors.teal[500],
                       ),
                     )
                   : null,
@@ -53,13 +53,14 @@ class _HomePageState extends State<HomePage> {
                 //filter button
                 IconButton(
                   onPressed: () {
-                    //
+                    //TODO: Add filter functionality
                   },
                   icon: Icon(
-                    Icons.filter_alt_outlined,
-                    color: Colors.teal[800],
+                    Icons.filter_alt_sharp,
+                    color: Colors.teal[500],
                   ),
                 ),
+                // Add filter dropdown here
               ],
             )
           : null,

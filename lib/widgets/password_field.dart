@@ -12,6 +12,8 @@ class PasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: _passwordController,
+      keyboardType: TextInputType.visiblePassword,
+      autocorrect: false,
       obscureText: true,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(

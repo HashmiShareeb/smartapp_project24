@@ -127,7 +127,6 @@ class _LoginPageState extends State<LoginPage> {
                     'Not registered? Sign up',
                     style: TextStyle(
                       color: Colors.teal,
-                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -146,7 +145,6 @@ class _LoginPageState extends State<LoginPage> {
                     'Continue as guest',
                     style: TextStyle(
                       color: Colors.teal,
-                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
