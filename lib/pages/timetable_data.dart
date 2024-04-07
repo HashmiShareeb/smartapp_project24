@@ -66,11 +66,56 @@ class _TimeTableDataState extends State<TimeTableData> {
                 DayView(
                   dateStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
+                  startHour: 8,
+                  eventTileBuilder: (date, events, boundry, start, end) {
+                    // Calculate the duration of the event in minutes
+                    int durationInMinutes = events[0]
+                        .endTime!
+                        .difference(events[0].startTime!)
+                        .inMinutes;
 
-                  // Add your Firebase details here
+                    // Calculate the height of the event tile based on its duration
+                    double eventTileHeight = durationInMinutes *
+                        1.0; // Adjust the multiplier as needed
 
-                  // User's name
-                  //timeTableItems
+                    // Return a Container with the calculated height and event content
+                    return Container(
+                      height: eventTileHeight,
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors
+                            .teal, // Customize the background color as needed
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            events[0].title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            events[0].description ?? '',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            '${DateFormat('HH:mm').format(events[0].startTime!)} - ${DateFormat('HH:mm').format(events[0].endTime ?? DateTime.now())}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 WeekView(
                   headerStringBuilder: (date, {secondaryDate}) =>

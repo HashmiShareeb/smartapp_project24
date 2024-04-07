@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
@@ -12,6 +14,50 @@ class EventFormPage extends StatefulWidget {
 class _EventFormPageState extends State<EventFormPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  TimeOfDay _selectedEndTime = TimeOfDay.now();
+
+  //datepicker void
+  Future<void> _datePicker(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  //timepicker void
+  Future<void> _pickStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != TimeOfDay.now()) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
+
+  //timepicker void
+  Future<void> _pickEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != TimeOfDay.now()) {
+      setState(() {
+        _selectedEndTime = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +103,53 @@ class _EventFormPageState extends State<EventFormPage> {
                 fillColor: Colors.white,
                 filled: true,
               ),
+              maxLines: null,
+            ),
+            ListTile(
+              title: Text('Date'),
+              trailing: Text(
+                DateFormat("dd/MM/yyyy").format(_selectedDate),
+              ),
+              onTap: () => _datePicker(context),
+            ),
+            ListTile(
+              title: Text('Start Time'),
+              trailing: Text(
+                _selectedTime.format(context),
+              ),
+              onTap: () => _pickStartTime(context),
+            ),
+            ListTile(
+              title: Text('End Time'),
+              trailing: Text(
+                _selectedEndTime.format(context),
+              ),
+              onTap: () => _pickEndTime(context),
             ),
             ElevatedButton(
               onPressed: () {
                 final event = CalendarEventData(
-                  date: DateTime.now(),
+                  date: _selectedDate,
                   event: _titleController.text,
                   title: _titleController.text,
                   description: _descriptionController.text,
-                  startTime: DateTime(2024, 3, 30, 8),
-                  endTime: DateTime(2024, 3, 30, 10),
+                  startTime: DateTime(
+                    _selectedDate.year,
+                    _selectedDate.month,
+                    _selectedDate.day,
+                    _selectedTime.hour,
+                    _selectedTime.minute,
+                  ),
+                  endTime: DateTime(
+                    _selectedDate.year,
+                    _selectedDate.month,
+                    _selectedDate.day,
+                    _selectedEndTime.hour,
+                    _selectedEndTime.minute,
+                  ),
                 );
                 CalendarControllerProvider.of(context).controller.add(event);
-                //  final event = CalendarEventData(
-                //   date: DateTime.now(),
-                //   event: "Event 1",
-                //   title: 'event 1',
-                //   description: 'event 1 description',
-                //   startTime: DateTime(2024, 3, 30, 8),
-                //   endTime: DateTime(2024, 3, 30, 10),
-                // );
+
                 Navigator.pop(context); // Navigate back to the previous page
               },
               child: Text('Add Event'),
