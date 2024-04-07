@@ -68,19 +68,38 @@ class _TimeTableDataState extends State<TimeTableData> {
                       DateFormat('d MMMM yyyy').format(date),
                   startHour: 8,
                   eventTileBuilder: (date, events, boundry, start, end) {
-                    // Calculate the duration of the event in minutes
-                    int durationInMinutes = events[0]
-                        .endTime!
-                        .difference(events[0].startTime!)
-                        .inMinutes;
-
-                    // Calculate the height of the event tile based on its duration
-                    double eventTileHeight = durationInMinutes *
-                        1.0; // Adjust the multiplier as needed
-
                     // Return a Container with the calculated height and event content
+                    if (events[0]
+                            .endTime!
+                            .difference(events[0].startTime!)
+                            .inHours ==
+                        1) {
+                      return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.teal,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              events[0].title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                     return Container(
-                      height: eventTileHeight,
+                      width: double.infinity,
+                      height: double.infinity,
                       padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
                         color: Colors
