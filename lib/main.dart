@@ -26,6 +26,12 @@ class MainApp extends StatelessWidget {
     return CalendarControllerProvider(
       controller: EventController()..addAll(_events),
       child: MaterialApp(
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.system,
+        themeAnimationCurve: Curves.easeInOutCubic,
         debugShowCheckedModeBanner: false,
         scrollBehavior: const ScrollBehavior().copyWith(
           dragDevices: {
@@ -64,17 +70,17 @@ List<CalendarEventData> _events = [
   CalendarEventData(
     //firestore
     date: _now,
-    startTime: DateTime(_now.year, _now.month, _now.day, 8),
+    startTime: DateTime(_now.year, _now.month, _now.day, 8, 30),
     endTime: DateTime(_now.year, _now.month, _now.day, 12),
-    title: "Chemistry Viva",
-    description: "Today is Joe's birthday.",
+    title: "Frontend Development",
+    description: "Theorie Next.js and tailwindcss",
   ),
   CalendarEventData(
     date: _now.add(Duration(days: 1)),
     startTime: DateTime(_now.year, _now.month, _now.day, 18),
     endTime: DateTime(_now.year, _now.month, _now.day, 19),
-    title: "Wedding anniversary",
-    description: "Attend uncle's wedding anniversary.",
+    title: "Backend Development",
+    description: ".NET Core and C#",
   ),
   CalendarEventData(
     date: _now,

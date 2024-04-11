@@ -71,6 +71,8 @@ class _HomePageState extends State<HomePage> {
             _selectedIndex = index;
           });
         },
+
+        //teal theme
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),

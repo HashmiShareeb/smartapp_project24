@@ -66,7 +66,6 @@ class _TimeTableDataState extends State<TimeTableData> {
                 DayView(
                   dateStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
-                  startHour: 8,
                   eventTileBuilder: (date, events, boundry, start, end) {
                     // Return a Container with the calculated height and event content
                     if (events[0]
@@ -79,7 +78,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                         height: double.infinity,
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
-                          color: Colors.teal,
+                          color: events[0].color,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Column(
@@ -100,7 +99,8 @@ class _TimeTableDataState extends State<TimeTableData> {
                     return Container(
                       width: double.infinity,
                       height: double.infinity,
-                      padding: EdgeInsets.all(8.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                       decoration: BoxDecoration(
                         color: Colors
                             .teal, // Customize the background color as needed
@@ -108,6 +108,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             events[0].title,
@@ -191,8 +192,9 @@ class _TimeTableDataState extends State<TimeTableData> {
           // );
           // CalendarControllerProvider.of(context).controller.add(event);
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.teal[800]),
         shape: CircleBorder(),
+        backgroundColor: Colors.teal[50],
       ),
     );
   }

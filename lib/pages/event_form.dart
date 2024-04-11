@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class EventFormPage extends StatefulWidget {
   const EventFormPage({Key? key}) : super(key: key);
@@ -57,6 +58,40 @@ class _EventFormPageState extends State<EventFormPage> {
         _selectedEndTime = picked;
       });
     }
+  }
+
+  Color _selectedColor = Colors.teal; // Default event color
+
+  // Color picker void
+  Future<void> _pickColor() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _selectedColor,
+              onColorChanged: (Color color) {
+                setState(() {
+                  _selectedColor = color;
+                });
+              },
+              showLabel: true,
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -126,6 +161,14 @@ class _EventFormPageState extends State<EventFormPage> {
               ),
               onTap: () => _pickEndTime(context),
             ),
+            ListTile(
+              title: const Text('Color'),
+              trailing: CircleAvatar(
+                backgroundColor: _selectedColor,
+                radius: 15,
+              ),
+              onTap: _pickColor,
+            ),
             ElevatedButton(
               onPressed: () {
                 final event = CalendarEventData(
@@ -147,6 +190,8 @@ class _EventFormPageState extends State<EventFormPage> {
                     _selectedEndTime.hour,
                     _selectedEndTime.minute,
                   ),
+                  color: Color(int.parse(_selectedColor.value.toRadixString(16),
+                      radix: 16)),
                 );
                 CalendarControllerProvider.of(context).controller.add(event);
 
