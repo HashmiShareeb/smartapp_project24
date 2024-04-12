@@ -28,37 +28,46 @@ class _TimeTableDataState extends State<TimeTableData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 0; // Day view
-                  });
-                },
+      appBar: AppBar(
+        title: const Text('Calendar'),
+        //custom back arrow button
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+          ),
+        ),
+        //customizing the appbar
+
+        actions: [
+          DropdownButton<int>(
+            value: _selectedIndex,
+            onChanged: (int? newIndex) {
+              setState(() {
+                _selectedIndex = newIndex!;
+              });
+            },
+            items: [
+              DropdownMenuItem<int>(
+                value: 0,
                 child: Text('Day'),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 1; // Week view
-                  });
-                },
+              DropdownMenuItem<int>(
+                value: 1,
                 child: Text('Week'),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 2; // Month view
-                  });
-                },
+              DropdownMenuItem<int>(
+                value: 2,
                 child: Text('Month'),
               ),
             ],
           ),
+        ],
+      ),
+      body: Column(
+        children: [
           Expanded(
             child: IndexedStack(
               index: _selectedIndex,
@@ -136,6 +145,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                       ),
                     );
                   },
+                  dayTitleBuilder: DayHeader.hidden, // To Hide day header
                 ),
                 WeekView(
                   headerStringBuilder: (date, {secondaryDate}) =>

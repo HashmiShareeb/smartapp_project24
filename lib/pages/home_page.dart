@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:calendar_view/calendar_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smartapp_project24/pages/course_page.dart';
 import 'package:smartapp_project24/pages/profiles_page.dart';
 import 'package:smartapp_project24/pages/tasks_page.dart';
@@ -27,14 +25,12 @@ class _HomePageState extends State<HomePage> {
       // backgroundColor: Colors.grey[200],
       appBar: _selectedIndex == 0
           ? AppBar(
-              foregroundColor: Colors.teal[500],
-              backgroundColor: Colors.teal[50],
               title: Text(
                 'Hello, ${user?.displayName ?? 'Guest'}!',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                // style: TextStyle(
+                //   fontSize: 20,
+                //   fontWeight: FontWeight.bold,
+                // ),
               ),
               automaticallyImplyLeading:
                   user?.displayName == null ? true : false,
@@ -46,6 +42,7 @@ class _HomePageState extends State<HomePage> {
                       icon: Icon(
                         Icons.arrow_back_ios_new_rounded,
                         color: Colors.teal[500],
+                        size: 20,
                       ),
                     )
                   : null,
@@ -56,8 +53,9 @@ class _HomePageState extends State<HomePage> {
                     //TODO: Add filter functionality
                   },
                   icon: Icon(
-                    Icons.filter_alt_sharp,
+                    Icons.filter_list_outlined,
                     color: Colors.teal[500],
+                    size: 22,
                   ),
                 ),
                 // Add filter dropdown here
@@ -79,15 +77,20 @@ class _HomePageState extends State<HomePage> {
             selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
+          // NavigationDestination(
+          //   icon: Icon(Icons.schedule_outlined),
+          //   selectedIcon: Icon(Icons.schedule),
+          //   label: 'Schedule',
+          // ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_today_outlined),
+            selectedIcon: Icon(Icons.calendar_today),
+            label: 'Timetable',
+          ),
           NavigationDestination(
             icon: Icon(Icons.menu_book_outlined),
             selectedIcon: Icon(Icons.menu_book),
-            label: 'My courses',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.task_alt_outlined),
-            selectedIcon: Icon(Icons.task_alt),
-            label: 'Tasks',
+            label: 'Courses',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
@@ -97,9 +100,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: _selectedIndex == 0
-          ? TimeTableData()
+          ? CoursePage()
           : _selectedIndex == 1
-              ? CoursePage()
+              ? TimeTableData()
               : _selectedIndex == 2
                   ? TasksPage()
                   : ProfilePage(),

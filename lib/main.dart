@@ -26,12 +26,52 @@ class MainApp extends StatelessWidget {
     return CalendarControllerProvider(
       controller: EventController()..addAll(_events),
       child: MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.system,
         themeAnimationCurve: Curves.easeInOutCubic,
+        //navigation theme
+        theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            // backgroundColor: Colors.teal[300],
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            iconTheme: IconThemeData(
+              color: Colors.black,
+              size: 20,
+            ),
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Colors.teal,
+          ),
+          navigationBarTheme: NavigationBarThemeData(
+            backgroundColor: Colors.teal,
+            indicatorColor: Colors.teal[300],
+            labelTextStyle: MaterialStateProperty.all(
+              TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+            iconTheme: MaterialStatePropertyAll(
+              IconThemeData(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.teal[100],
+              ),
+              textStyle: MaterialStateProperty.all(
+                TextStyle(
+                  color: Colors.teal[500],
+                ),
+              ),
+            ),
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         scrollBehavior: const ScrollBehavior().copyWith(
           dragDevices: {

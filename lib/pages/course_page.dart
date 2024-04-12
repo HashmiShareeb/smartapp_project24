@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smartapp_project24/pages/timetable_data.dart';
 
 class TimetableItem {
   final String courseName;
@@ -22,12 +23,25 @@ class _CoursePageState extends State<CoursePage> {
   // Dummy list of timetable items
   List<TimetableItem> timetableItems = [
     TimetableItem(
-        courseName: 'Frontend Development', time: '8:00 AM - 9:30 AM'),
+      courseName: 'Frontend Development',
+      time: '8:00 AM - 9:30 AM',
+    ),
     TimetableItem(
-        courseName: 'Backend devolopment', time: '9:45 AM - 11:15 AM'),
-    TimetableItem(courseName: 'User Experience', time: '11:30 AM - 1:00 PM'),
-    TimetableItem(courseName: 'Database', time: '6:45 PM - 8:15 PM'),
-    TimetableItem(courseName: 'Cyber Security', time: '8:30 PM - 10:00 PM'),
+      courseName: 'Backend Development',
+      time: '9:45 AM - 11:15 AM',
+    ),
+    TimetableItem(
+      courseName: 'User Experience',
+      time: '11:30 AM - 1:00 PM',
+    ),
+    TimetableItem(
+      courseName: 'Database',
+      time: '6:45 PM - 8:15 PM',
+    ),
+    TimetableItem(
+      courseName: 'Cyber Security',
+      time: '8:30 PM - 10:00 PM',
+    ),
   ];
 
   // Count of classes
@@ -35,44 +49,58 @@ class _CoursePageState extends State<CoursePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Course'),
-      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              // color: Colors.white,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 20.0,
-                ),
-                child: RichText(
-                  textAlign: TextAlign.start,
-                  text: TextSpan(
-                    text: DateFormat('EEEE').format(
-                      DateTime.now(),
-                    ),
-                    style: TextStyle(
-                      color: Colors.teal[800],
-                      fontSize: 16,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '\n${DateFormat('d MMMM').format(
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: Container(
+                width: double.infinity,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      textAlign: TextAlign.start,
+                      text: TextSpan(
+                        text: DateFormat('EEEE').format(
                           DateTime.now(),
-                        )}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.teal[800],
                         ),
+                        style: TextStyle(
+                          color: Colors.teal[500],
+                          fontSize: 16,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '\n${DateFormat('d MMMM').format(
+                              DateTime.now(),
+                            )}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.teal[500],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Navigate to calendar page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TimeTableData(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Calendar',
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -86,7 +114,7 @@ class _CoursePageState extends State<CoursePage> {
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -118,9 +146,10 @@ class _CoursePageState extends State<CoursePage> {
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: Colors.teal[800],
+                      size: 20,
                     ),
                     // Tile background color
-                    // tileColor: Colors.tealAccent[100],
+                    // tileColor: Colors.grey[200],
                     // Content padding
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
