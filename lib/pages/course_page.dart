@@ -62,6 +62,14 @@ class _CoursePageState extends State<CoursePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Text(
+                      'Today',
+                      style: TextStyle(
+                        color: Colors.teal[500],
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     RichText(
                       textAlign: TextAlign.start,
                       text: TextSpan(
@@ -86,20 +94,14 @@ class _CoursePageState extends State<CoursePage> {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Navigate to calendar page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TimeTableData(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Calendar',
-                      ),
-                    ),
+                    // CircleAvatar(
+                    //   radius: 25,
+                    //   backgroundColor: Colors.teal[800],
+                    //   child: Icon(
+                    //     Icons.calendar_today,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

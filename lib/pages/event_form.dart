@@ -102,104 +102,109 @@ class _EventFormPageState extends State<EventFormPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              autocorrect: true,
-              controller: _titleController,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.teal),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Event Title',
-                fillColor: Colors.white,
-                filled: true,
-              ),
-            ),
-            TextField(
-              autocorrect: true,
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.teal),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Event description',
-                fillColor: Colors.white,
-                filled: true,
-              ),
-              maxLines: null,
-            ),
-            ListTile(
-              title: Text('Date'),
-              trailing: Text(
-                DateFormat("dd/MM/yyyy").format(_selectedDate),
-              ),
-              onTap: () => _datePicker(context),
-            ),
-            ListTile(
-              title: Text('Start Time'),
-              trailing: Text(
-                _selectedTime.format(context),
-              ),
-              onTap: () => _pickStartTime(context),
-            ),
-            ListTile(
-              title: Text('End Time'),
-              trailing: Text(
-                _selectedEndTime.format(context),
-              ),
-              onTap: () => _pickEndTime(context),
-            ),
-            ListTile(
-              title: const Text('Color'),
-              trailing: CircleAvatar(
-                backgroundColor: _selectedColor,
-                radius: 15,
-              ),
-              onTap: _pickColor,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final event = CalendarEventData(
-                  date: _selectedDate,
-                  event: _titleController.text,
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  startTime: DateTime(
-                    _selectedDate.year,
-                    _selectedDate.month,
-                    _selectedDate.day,
-                    _selectedTime.hour,
-                    _selectedTime.minute,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                autocorrect: true,
+                controller: _titleController,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  endTime: DateTime(
-                    _selectedDate.year,
-                    _selectedDate.month,
-                    _selectedDate.day,
-                    _selectedEndTime.hour,
-                    _selectedEndTime.minute,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.teal),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  color: Color(int.parse(_selectedColor.value.toRadixString(16),
-                      radix: 16)),
-                );
-                CalendarControllerProvider.of(context).controller.add(event);
+                  hintText: 'Event Title',
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                autocorrect: true,
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.teal),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Event description',
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                title: Text('Date'),
+                trailing: Text(
+                  DateFormat("dd/MM/yyyy").format(_selectedDate),
+                ),
+                onTap: () => _datePicker(context),
+              ),
+              ListTile(
+                title: Text('Start Time'),
+                trailing: Text(
+                  _selectedTime.format(context),
+                ),
+                onTap: () => _pickStartTime(context),
+              ),
+              ListTile(
+                title: Text('End Time'),
+                trailing: Text(
+                  _selectedEndTime.format(context),
+                ),
+                onTap: () => _pickEndTime(context),
+              ),
+              ListTile(
+                title: const Text('Color'),
+                trailing: CircleAvatar(
+                  backgroundColor: _selectedColor,
+                  radius: 15,
+                ),
+                onTap: _pickColor,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final event = CalendarEventData(
+                    date: _selectedDate,
+                    event: _titleController.text,
+                    title: _titleController.text,
+                    description: _descriptionController.text,
+                    startTime: DateTime(
+                      _selectedDate.year,
+                      _selectedDate.month,
+                      _selectedDate.day,
+                      _selectedTime.hour,
+                      _selectedTime.minute,
+                    ),
+                    endTime: DateTime(
+                      _selectedDate.year,
+                      _selectedDate.month,
+                      _selectedDate.day,
+                      _selectedEndTime.hour,
+                      _selectedEndTime.minute,
+                    ),
+                    color: Color(int.parse(
+                        _selectedColor.value.toRadixString(16),
+                        radix: 16)),
+                  );
+                  CalendarControllerProvider.of(context).controller.add(event);
 
-                Navigator.pop(context); // Navigate back to the previous page
-              },
-              child: Text('Add Event'),
-            ),
-          ],
+                  Navigator.pop(context); // Navigate back to the previous page
+                },
+                child: Text('Add Event'),
+              ),
+            ],
+          ),
         ),
       ),
     );

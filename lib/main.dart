@@ -19,7 +19,6 @@ void main() async {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -29,31 +28,33 @@ class MainApp extends StatelessWidget {
         themeAnimationCurve: Curves.easeInOutCubic,
         //navigation theme
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.grey[100],
           appBarTheme: AppBarTheme(
-            // backgroundColor: Colors.teal[300],
+            backgroundColor: Colors.teal[50],
             titleTextStyle: TextStyle(
-              color: Colors.black,
+              color: Colors.teal[300],
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
             iconTheme: IconThemeData(
-              color: Colors.black,
+              color: Colors.teal[500],
               size: 20,
             ),
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Colors.teal,
+            backgroundColor:
+                Colors.amber[900], // 30% Accent - Button background
           ),
           navigationBarTheme: NavigationBarThemeData(
-            backgroundColor: Colors.teal,
-            indicatorColor: Colors.teal[300],
+            backgroundColor: Colors.teal[800],
+            indicatorColor: Colors.teal,
             labelTextStyle: MaterialStateProperty.all(
               TextStyle(
                 color: Colors.white,
                 fontSize: 12,
               ),
             ),
-            iconTheme: MaterialStatePropertyAll(
+            iconTheme: MaterialStateProperty.all(
               IconThemeData(
                 color: Colors.white,
               ),
@@ -62,11 +63,11 @@ class MainApp extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                Colors.teal[100],
+                Colors.amber[900], // 30% Accent - Button background,
               ),
               textStyle: MaterialStateProperty.all(
                 TextStyle(
-                  color: Colors.teal[500],
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -108,7 +109,6 @@ Future<int> yourEventSorterFunction<T>(
 
 List<CalendarEventData> _events = [
   CalendarEventData(
-    //firestore
     date: _now,
     startTime: DateTime(_now.year, _now.month, _now.day, 8, 30),
     endTime: DateTime(_now.year, _now.month, _now.day, 12),

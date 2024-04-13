@@ -41,8 +41,6 @@ class _HomePageState extends State<HomePage> {
                       },
                       icon: Icon(
                         Icons.arrow_back_ios_new_rounded,
-                        color: Colors.teal[500],
-                        size: 20,
                       ),
                     )
                   : null,
@@ -54,8 +52,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(
                     Icons.filter_list_outlined,
-                    color: Colors.teal[500],
-                    size: 22,
+                    size: 30.0,
                   ),
                 ),
                 // Add filter dropdown here

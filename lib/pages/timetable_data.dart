@@ -30,17 +30,6 @@ class _TimeTableDataState extends State<TimeTableData> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendar'),
-        //custom back arrow button
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-          ),
-        ),
-        //customizing the appbar
-
         actions: [
           DropdownButton<int>(
             value: _selectedIndex,
@@ -67,6 +56,7 @@ class _TimeTableDataState extends State<TimeTableData> {
         ],
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
             child: IndexedStack(
@@ -202,9 +192,8 @@ class _TimeTableDataState extends State<TimeTableData> {
           // );
           // CalendarControllerProvider.of(context).controller.add(event);
         },
-        child: Icon(Icons.add, color: Colors.teal[800]),
+        child: Icon(Icons.add),
         shape: CircleBorder(),
-        backgroundColor: Colors.teal[50],
       ),
     );
   }
