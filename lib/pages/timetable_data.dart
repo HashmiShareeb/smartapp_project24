@@ -1,7 +1,8 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smartapp_project24/pages/event_form.dart';
+import 'package:smartapp_project24/pages/events/event_detail.dart';
+import 'package:smartapp_project24/pages/events/event_form.dart';
 
 class TimeTableData extends StatefulWidget {
   const TimeTableData({Key? key}) : super(key: key);
@@ -29,7 +30,8 @@ class _TimeTableDataState extends State<TimeTableData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: const Text('Timetable'),
+        automaticallyImplyLeading: false,
         actions: [
           DropdownButton<int>(
             value: _selectedIndex,
@@ -53,6 +55,29 @@ class _TimeTableDataState extends State<TimeTableData> {
               ),
             ],
           ),
+          const SizedBox(width: 12),
+          CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.lightBlue[500],
+            child: IconButton(
+              icon: const Icon(Icons.add_circle_outline_rounded),
+              onPressed: () async {
+                final event = await Navigator.push<CalendarEventData>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EventFormPage(),
+                    fullscreenDialog: true,
+                  ),
+                );
+
+                // If an event was returned, add it to the EventController
+                if (event != null) {
+                  CalendarControllerProvider.of(context).controller.add(event);
+                }
+              },
+            ),
+          ),
+          const SizedBox(width: 12),
         ],
       ),
       body: Column(
@@ -66,13 +91,19 @@ class _TimeTableDataState extends State<TimeTableData> {
                   dateStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
                   eventTileBuilder: (date, events, boundry, start, end) {
-                    // Return a Container with the calculated height and event content
-                    if (events[0]
-                            .endTime!
-                            .difference(events[0].startTime!)
-                            .inHours ==
-                        1) {
-                      return Container(
+                    // Return a GestureDetector to enable tapping on the event tile
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to event detail page when tile is tapped
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EventDetailPage(event: events[0]),
+                          ),
+                        );
+                      },
+                      child: Container(
                         width: double.infinity,
                         height: double.infinity,
                         padding: EdgeInsets.all(8.0),
@@ -80,62 +111,47 @@ class _TimeTableDataState extends State<TimeTableData> {
                           color: events[0].color,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              events[0].title,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                        child: Material(
+                          color:
+                              Colors.transparent, // Make material transparent
+                          child: InkWell(
+                            splashColor: Colors.lightBlue
+                                .withOpacity(0.5), // Set splash color
+                            borderRadius: BorderRadius.circular(5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  events[0].title,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  events[0].description ?? '',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  '${DateFormat('HH:mm').format(events[0].startTime!)} - ${DateFormat('HH:mm').format(events[0].endTime ?? DateTime.now())}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      );
-                    }
-                    return Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      decoration: BoxDecoration(
-                        color: Colors
-                            .teal, // Customize the background color as needed
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            events[0].title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            events[0].description ?? '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            '${DateFormat('HH:mm').format(events[0].startTime!)} - ${DateFormat('HH:mm').format(events[0].endTime ?? DateTime.now())}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
                       ),
                     );
                   },
-                  dayTitleBuilder: DayHeader.hidden, // To Hide day header
+                  // To Hide day header
                 ),
                 WeekView(
                   headerStringBuilder: (date, {secondaryDate}) =>
@@ -166,35 +182,6 @@ class _TimeTableDataState extends State<TimeTableData> {
         ],
       ),
       //plus button to add new timetable item eventcontroller
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Navigate to the EventFormPage and wait for the result
-          final event = await Navigator.push<CalendarEventData>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EventFormPage(),
-            ),
-          );
-
-          // If an event was returned, add it to the EventController
-          if (event != null) {
-            CalendarControllerProvider.of(context).controller.add(event);
-          }
-
-          // final event = CalendarEventData(
-          //   date: DateTime.now(),
-          //   event: "Event 1",
-          //   title: 'event 1',
-          //   description: 'event 1 description',
-          //   startTime: DateTime(2024, 3, 30, 8),
-          //   endTime: DateTime(2024, 3, 30, 10),
-          // );
-          // CalendarControllerProvider.of(context).controller.add(event);
-        },
-        child: Icon(Icons.add),
-        shape: CircleBorder(),
-      ),
     );
   }
 }

@@ -30,40 +30,40 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey[100],
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.teal[50],
+            backgroundColor: Colors.lightBlue[50],
             titleTextStyle: TextStyle(
-              color: Colors.teal[300],
+              color: Colors.lightBlue[300],
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
             iconTheme: IconThemeData(
-              color: Colors.teal[500],
+              color: Colors.lightBlue[500],
               size: 20,
             ),
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor:
-                Colors.amber[900], // 30% Accent - Button background
+                Colors.amber[500], // 30% Accent - Button background
           ),
           navigationBarTheme: NavigationBarThemeData(
-            backgroundColor: Colors.teal[800],
-            indicatorColor: Colors.teal,
+            backgroundColor: Colors.white,
+            indicatorColor: Colors.lightBlue[100],
             labelTextStyle: MaterialStateProperty.all(
               TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 12,
               ),
             ),
             iconTheme: MaterialStateProperty.all(
               IconThemeData(
-                color: Colors.white,
+                color: Colors.grey[800],
               ),
             ),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                Colors.amber[900], // 30% Accent - Button background,
+                Colors.amber[500], // 30% Accent - Button background,
               ),
               textStyle: MaterialStateProperty.all(
                 TextStyle(

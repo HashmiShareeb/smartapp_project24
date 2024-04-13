@@ -80,7 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.teal),
+                        borderSide: const BorderSide(color: Colors.lightBlue),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       hintText: 'Name',
@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.teal),
+                        borderSide: const BorderSide(color: Colors.lightBlue),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       hintText: 'Email',
@@ -122,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.teal),
+                        borderSide: const BorderSide(color: Colors.lightBlue),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       hintText: 'Password',
@@ -137,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: ElevatedButton(
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.teal,
+                      backgroundColor: Colors.lightBlue,
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       'Register',
                       style: TextStyle(
                         fontSize: 16,
-                        backgroundColor: Colors.teal,
+                        backgroundColor: Colors.orange,
                         color: Colors.white,
                       ),
                     ),
@@ -166,7 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: const Text(
                     'Already have an account?',
                     style: TextStyle(
-                      color: Colors.teal,
+                      color: Colors.lightBlue,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

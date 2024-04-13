@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smartapp_project24/pages/timetable_data.dart';
 
 class TimetableItem {
   final String courseName;
@@ -44,6 +43,8 @@ class _CoursePageState extends State<CoursePage> {
     ),
   ];
 
+  //added event here
+
   // Count of classes
   int get countClasses => timetableItems.length;
   @override
@@ -65,7 +66,7 @@ class _CoursePageState extends State<CoursePage> {
                     Text(
                       'Today',
                       style: TextStyle(
-                        color: Colors.teal[500],
+                        color: Colors.lightBlue[500],
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -77,7 +78,7 @@ class _CoursePageState extends State<CoursePage> {
                           DateTime.now(),
                         ),
                         style: TextStyle(
-                          color: Colors.teal[500],
+                          color: Colors.lightBlue[500],
                           fontSize: 16,
                         ),
                         children: <TextSpan>[
@@ -88,7 +89,7 @@ class _CoursePageState extends State<CoursePage> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
-                              color: Colors.teal[500],
+                              color: Colors.lightBlue[500],
                             ),
                           ),
                         ],
@@ -96,7 +97,7 @@ class _CoursePageState extends State<CoursePage> {
                     ),
                     // CircleAvatar(
                     //   radius: 25,
-                    //   backgroundColor: Colors.teal[800],
+                    //   backgroundColor: Colors.lightBlue[800],
                     //   child: Icon(
                     //     Icons.calendar_today,
                     //     color: Colors.white,
@@ -132,6 +133,7 @@ class _CoursePageState extends State<CoursePage> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        color: Colors.lightBlue[800],
                       ),
                     ),
                     // You can add more styling here
@@ -147,7 +149,7 @@ class _CoursePageState extends State<CoursePage> {
 
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: Colors.teal[800],
+                      color: Colors.lightBlue[800],
                       size: 20,
                     ),
                     // Tile background color

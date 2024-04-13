@@ -197,6 +197,7 @@ class _EventFormPageState extends State<EventFormPage> {
                         _selectedColor.value.toRadixString(16),
                         radix: 16)),
                   );
+
                   CalendarControllerProvider.of(context).controller.add(event);
 
                   Navigator.pop(context); // Navigate back to the previous page

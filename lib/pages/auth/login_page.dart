@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextButton(
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.teal,
+                      backgroundColor: Colors.orange[800],
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     'Not registered? Sign up',
                     style: TextStyle(
-                      color: Colors.teal,
+                      color: Colors.lightBlue,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     'Continue as guest',
                     style: TextStyle(
-                      color: Colors.teal,
+                      color: Colors.lightBlue,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
