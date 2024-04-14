@@ -92,6 +92,35 @@ class _TimeTableDataState extends State<TimeTableData> {
                       DateFormat('d MMMM yyyy').format(date),
                   eventTileBuilder: (date, events, boundry, start, end) {
                     // Return a GestureDetector to enable tapping on the event tile
+                    if (events.length == 1 &&
+                        events[0]
+                                .endTime!
+                                .difference(events[0].startTime!)
+                                .inHours ==
+                            1) {
+                      return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: events[0].color,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              events[0].title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                     return GestureDetector(
                       onTap: () {
                         // Navigate to event detail page when tile is tapped
@@ -185,25 +214,3 @@ class _TimeTableDataState extends State<TimeTableData> {
     );
   }
 }
-
-// class TimetableItem extends StatelessWidget {
-//   final String courseName;
-//   final String time;
-
-//   const TimetableItem({
-//     Key? key,
-//     required this.courseName,
-//     required this.time,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-//       child: ListTile(
-//         title: Text(courseName),
-//         subtitle: Text(time),
-//       ),
-//     );
-//   }
-// }

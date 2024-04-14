@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:smartapp_project24/models/event.dart';
 
 class EventFormPage extends StatefulWidget {
   const EventFormPage({Key? key}) : super(key: key);
@@ -18,6 +21,48 @@ class _EventFormPageState extends State<EventFormPage> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   TimeOfDay _selectedEndTime = TimeOfDay.now();
+
+  // final event = Event(
+  //   id: FirebaseAuth.instance.currentUser!.uid,
+  //   date: DateTime.now(),
+  //   title: '',
+  //   event: '',
+  //   description: '',
+  //   startTime: TimeOfDay.now(),
+  //   endTime: TimeOfDay.now(),
+  // );
+
+  final db = FirebaseFirestore.instance;
+  void addEvent() async {
+    await db
+        .collection(
+            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+        .add({
+          'date': _selectedDate,
+          'title': _titleController.text,
+          'description': _descriptionController.text,
+          'startTime': DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+            _selectedTime.hour,
+            _selectedTime.minute,
+          ),
+          'endTime': DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+            _selectedEndTime.hour,
+            _selectedEndTime.minute,
+          ),
+        })
+        .then(
+          (value) => print('Event added'),
+        )
+        .catchError(
+          (error) => print('Failed to add event: $error'),
+        );
+  }
 
   //datepicker void
   Future<void> _datePicker(BuildContext context) async {
@@ -60,7 +105,7 @@ class _EventFormPageState extends State<EventFormPage> {
     }
   }
 
-  Color _selectedColor = Colors.teal; // Default event color
+  Color _selectedColor = Colors.lightBlue; // Default event color
 
   // Color picker void
   Future<void> _pickColor() async {
@@ -201,6 +246,8 @@ class _EventFormPageState extends State<EventFormPage> {
                   CalendarControllerProvider.of(context).controller.add(event);
 
                   Navigator.pop(context); // Navigate back to the previous page
+
+                  addEvent();
                 },
                 child: Text('Add Event'),
               ),
