@@ -28,16 +28,34 @@ class MainApp extends StatelessWidget {
         themeAnimationCurve: Curves.easeInOutCubic,
         //navigation theme
         theme: ThemeData(
+          datePickerTheme: DatePickerThemeData(
+            backgroundColor: Colors.white,
+            headerHelpStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            confirmButtonStyle: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.orange, // 30% Accent - Button background,
+              ),
+              textStyle: MaterialStateProperty.all(
+                TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           scaffoldBackgroundColor: Colors.grey[100],
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.lightBlue[50],
+            backgroundColor: Colors.lightBlue[900],
             titleTextStyle: TextStyle(
-              color: Colors.lightBlue[300],
+              color: Colors.lightBlue[50],
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
             iconTheme: IconThemeData(
-              color: Colors.lightBlue[500],
+              color: Colors.lightBlue[50],
               size: 20,
             ),
           ),
@@ -72,6 +90,7 @@ class MainApp extends StatelessWidget {
             ),
           ),
         ),
+
         debugShowCheckedModeBanner: false,
         scrollBehavior: const ScrollBehavior().copyWith(
           dragDevices: {

@@ -7,8 +7,8 @@ class Event {
   final String event;
   final String title;
   final String description;
-
   final DateTime date;
+  final Color color;
   // final String location; // Example of a custom property
 
   Event({
@@ -19,6 +19,7 @@ class Event {
     required this.title,
     required this.description,
     required this.date,
+    required this.color,
     // required this.location,
   });
 
@@ -30,6 +31,8 @@ class Event {
       title: data['title'],
       description: data['description'],
       date: data['date'],
+      color: data['color'],
+
       // location: data['location'],
     );
   }

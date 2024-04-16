@@ -35,15 +35,16 @@ class _CoursePageState extends State<CoursePage> {
 
         // Iterate over documents and add events to the list
         querySnapshot.docs.forEach((doc) {
-          events.add(CalendarEventData(
-            date: (doc['date'] as Timestamp).toDate(),
-            startTime: (doc['startTime'] as Timestamp).toDate(),
-            endTime: (doc['endTime'] as Timestamp).toDate(),
-            title: doc['title'] ?? '',
-            description: doc['description'] ?? '',
-            color: Colors
-                .lightBlue, // You may need to adjust this based on your data
-          ));
+          events.add(
+            CalendarEventData(
+              date: (doc['date'] as Timestamp).toDate(),
+              startTime: (doc['startTime'] as Timestamp).toDate(),
+              endTime: (doc['endTime'] as Timestamp).toDate(),
+              title: doc['title'] ?? '',
+              description: doc['description'] ?? '',
+              color: Color(doc['color'] ?? Colors.lightBlue),
+            ),
+          );
         });
       });
     });
@@ -105,20 +106,27 @@ class _CoursePageState extends State<CoursePage> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+              ),
               child: Text(
-                'Today\'s Classes: ${events.length}',
+                'Events: ${events.length}',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.lightBlue[500],
                 ),
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             Expanded(
               child: ListView.separated(
                 itemCount: events.length,
                 separatorBuilder: (context, index) => SizedBox(height: 10),
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
                 itemBuilder: (context, index) {
                   final event = events[index];
                   return ListTile(
@@ -139,6 +147,18 @@ class _CoursePageState extends State<CoursePage> {
                         color: Colors.white70,
                       ),
                     ),
+                    leading: CircleAvatar(
+                      backgroundColor: event.color,
+                      child: Text(
+                        event.title[0].toUpperCase(),
+                        style: TextStyle(
+                          color: event.color.computeLuminance() > 0.5
+                              ? Colors.black
+                              : Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: event.color.computeLuminance() > 0.5
@@ -157,6 +177,9 @@ class _CoursePageState extends State<CoursePage> {
                         ),
                       );
                     },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   );
                 },
               ),

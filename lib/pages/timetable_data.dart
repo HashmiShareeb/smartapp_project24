@@ -57,10 +57,13 @@ class _TimeTableDataState extends State<TimeTableData> {
           ),
           const SizedBox(width: 12),
           CircleAvatar(
-            backgroundColor: Colors.transparent,
-            foregroundColor: Colors.lightBlue[500],
+            backgroundColor:
+                Colors.lightBlue.withOpacity(0.5), // Set background color
+            foregroundColor: Colors.lightBlue[50],
             child: IconButton(
-              icon: const Icon(Icons.add_circle_outline_rounded),
+              icon: const Icon(
+                Icons.add_circle_outline_rounded,
+              ),
               onPressed: () async {
                 final event = await Navigator.push<CalendarEventData>(
                   context,

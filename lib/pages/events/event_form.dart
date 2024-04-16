@@ -57,6 +57,9 @@ class _EventFormPageState extends State<EventFormPage> {
             _selectedEndTime.hour,
             _selectedEndTime.minute,
           ),
+          'color': Color(
+                  int.parse(_selectedColor.value.toRadixString(16), radix: 16))
+              .value,
         })
         .then(
           (value) => print('Event added'),
@@ -66,20 +69,6 @@ class _EventFormPageState extends State<EventFormPage> {
         );
 
     //if event added show snackbar
-  }
-
-  void deleteEvent() async {
-    await db
-        .collection(
-            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
-        .doc()
-        .delete()
-        .then(
-          (value) => print('Event deleted'),
-        )
-        .catchError(
-          (error) => print('Failed to delete event: $error'),
-        );
   }
 
   //datepicker void
@@ -304,7 +293,7 @@ class _EventFormPageState extends State<EventFormPage> {
                       radix: 16)),
                 ));
             Navigator.pop(context);
-            deleteEvent();
+            addEvent();
           },
           child: const Icon(Icons.add),
         ));

@@ -1,4 +1,6 @@
 import 'package:calendar_view/calendar_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +41,21 @@ class _EventDetailPageState extends State<EventDetailPage> {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  final db = FirebaseFirestore.instance;
+  void deleteEvent() async {
+    await db
+        .collection(
+            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+        .doc()
+        .delete()
+        .then(
+          (value) => print('Event deleted'),
+        )
+        .catchError(
+          (error) => print('Failed to delete event: $error'),
+        );
   }
 
   Future<void> _pickStartTime(BuildContext context) async {
@@ -297,6 +314,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               .controller
               .remove(widget.event);
           Navigator.of(context).pop();
+          deleteEvent();
         },
         child: Icon(Icons.delete),
       ),
