@@ -1,52 +1,54 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-class TimetableItem {
-  final String courseName;
-  final String time;
-
-  TimetableItem({
-    required this.courseName,
-    required this.time,
-  });
-}
+import 'package:calendar_view/calendar_view.dart';
+import 'package:smartapp_project24/pages/events/event_detail.dart';
 
 class CoursePage extends StatefulWidget {
-  const CoursePage({super.key});
+  const CoursePage({Key? key}) : super(key: key);
 
   @override
   State<CoursePage> createState() => _CoursePageState();
 }
 
 class _CoursePageState extends State<CoursePage> {
-  // Dummy list of timetable items
-  List<TimetableItem> timetableItems = [
-    TimetableItem(
-      courseName: 'Frontend Development',
-      time: '8:00 AM - 9:30 AM',
-    ),
-    TimetableItem(
-      courseName: 'Backend Development',
-      time: '9:45 AM - 11:15 AM',
-    ),
-    TimetableItem(
-      courseName: 'User Experience',
-      time: '11:30 AM - 1:00 PM',
-    ),
-    TimetableItem(
-      courseName: 'Database',
-      time: '6:45 PM - 8:15 PM',
-    ),
-    TimetableItem(
-      courseName: 'Cyber Security',
-      time: '8:30 PM - 10:00 PM',
-    ),
-  ];
+  List<CalendarEventData> events = []; // Initialize events list
 
-  //added event here
+  final db = FirebaseFirestore.instance;
 
-  // Count of classes
-  int get countClasses => timetableItems.length;
+  @override
+  void initState() {
+    super.initState();
+    displayEvents(); // Call function to fetch events from Firestore
+  }
+
+  void displayEvents() {
+    db
+        .collection(
+            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      setState(() {
+        // Clear previous events
+        events.clear();
+
+        // Iterate over documents and add events to the list
+        querySnapshot.docs.forEach((doc) {
+          events.add(CalendarEventData(
+            date: (doc['date'] as Timestamp).toDate(),
+            startTime: (doc['startTime'] as Timestamp).toDate(),
+            endTime: (doc['endTime'] as Timestamp).toDate(),
+            title: doc['title'] ?? '',
+            description: doc['description'] ?? '',
+            color: Colors
+                .lightBlue, // You may need to adjust this based on your data
+          ));
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,14 +97,6 @@ class _CoursePageState extends State<CoursePage> {
                         ],
                       ),
                     ),
-                    // CircleAvatar(
-                    //   radius: 25,
-                    //   backgroundColor: Colors.lightBlue[800],
-                    //   child: Icon(
-                    //     Icons.calendar_today,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -113,7 +107,7 @@ class _CoursePageState extends State<CoursePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
-                'Today\'s Classes: $countClasses',
+                'Today\'s Classes: ${events.length}',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 18,
@@ -123,43 +117,45 @@ class _CoursePageState extends State<CoursePage> {
             ),
             Expanded(
               child: ListView.separated(
-                itemCount: timetableItems.length,
+                itemCount: events.length,
                 separatorBuilder: (context, index) => SizedBox(height: 10),
                 itemBuilder: (context, index) {
-                  final item = timetableItems[index];
+                  final event = events[index];
                   return ListTile(
                     title: Text(
-                      item.courseName,
+                      event.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.lightBlue[800],
+                        color: event.color.computeLuminance() > 0.5
+                            ? Colors.black12
+                            : Colors.white,
                       ),
                     ),
-                    // You can add more styling here
-                    style: ListTileStyle.list,
-                    // Subtitle styling
                     subtitle: Text(
-                      item.time,
+                      '${DateFormat('hh:mm a').format(event.startTime!)} - ${DateFormat('hh:mm a').format(event.endTime!)}',
                       style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white70,
                       ),
                     ),
-
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: Colors.lightBlue[800],
+                      color: event.color.computeLuminance() > 0.5
+                          ? Colors.black
+                          : Colors.white,
                       size: 20,
                     ),
-                    // Tile background color
-                    // tileColor: Colors.grey[200],
-                    // Content padding
+                    tileColor: event.color,
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     onTap: () {
-                      // Handle tap event
-                      print('Tapped on ${item.courseName}');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventDetailPage(event: event),
+                        ),
+                      );
                     },
                   );
                 },

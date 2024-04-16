@@ -14,11 +14,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MainApp());
+  runApp(MainApp(events: _events));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, required List<CalendarEventData<Object?>> events});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,7 @@ class MainApp extends StatelessWidget {
             ),
           ),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor:
-                Colors.amber[500], // 30% Accent - Button background
+            backgroundColor: Colors.orange, // 30% Accent - Button background
           ),
           navigationBarTheme: NavigationBarThemeData(
             backgroundColor: Colors.white,
@@ -63,7 +62,7 @@ class MainApp extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                Colors.amber[500], // 30% Accent - Button background,
+                Colors.orange, // 30% Accent - Button background,
               ),
               textStyle: MaterialStateProperty.all(
                 TextStyle(
@@ -110,9 +109,16 @@ Future<int> yourEventSorterFunction<T>(
 List<CalendarEventData> _events = [
   CalendarEventData(
     date: _now,
-    startTime: DateTime(_now.year, _now.month, _now.day, 8, 30),
-    endTime: DateTime(_now.year, _now.month, _now.day, 12),
+    startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
     title: "Frontend Development",
     description: "Theorie Next.js and tailwindcss",
+  ),
+  CalendarEventData(
+    date: _now,
+    startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
+    title: "SmartApp Development",
+    description: "Flutter deployment and firebase integration",
   ),
 ];
