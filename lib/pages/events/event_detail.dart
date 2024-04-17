@@ -44,17 +44,67 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   final db = FirebaseFirestore.instance;
-  void deleteEvent() async {
+  // Future<void> deleteAllEvents() async {
+  //   final collectionRef = db.collection(
+  //       'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+  //   final batch = db.batch();
+
+  //   // Get all documents in batches (optional for large collections)
+  //   await collectionRef.get().then((querySnapshot) {
+  //     querySnapshot.docChanges.forEach((change) {
+  //       batch.delete(change.doc.reference);
+  //     });
+  //   });
+
+  //   await batch.commit().then((_) => print('All events deleted'));
+  // }
+
+  Future<void> deleteEventsByTitle(String title) async {
+    final collectionRef = db.collection(
+        'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+    final querySnapshot =
+        await collectionRef.where('title', isEqualTo: title).get();
+
+    querySnapshot.docChanges.forEach((change) {
+      change.doc.reference.delete();
+    });
+
+    print('Events with title: $title deleted');
+  }
+
+  //edit event
+  void editEvent() async {
     await db
         .collection(
             'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
         .doc()
-        .delete()
+        .update({
+          'date': _selectedDate,
+          'title': _titleController.text,
+          'description': _descriptionController.text,
+          'startTime': DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+            _selectedTime.hour,
+            _selectedTime.minute,
+          ),
+          'endTime': DateTime(
+            _selectedDate.year,
+            _selectedDate.month,
+            _selectedDate.day,
+            _selectedEndTime.hour,
+            _selectedEndTime.minute,
+          ),
+          'color': Color(
+                  int.parse(_selectedColor.value.toRadixString(16), radix: 16))
+              .value,
+        })
         .then(
-          (value) => print('Event deleted'),
+          (value) => print('Event updated'),
         )
         .catchError(
-          (error) => print('Failed to delete event: $error'),
+          (error) => print('Failed to update event: $error'),
         );
   }
 
@@ -142,14 +192,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
         title: Text(
           widget.event.title,
           style: TextStyle(
-            color: _appBarColor.computeLuminance() > 0.5
+            color: _appBarColor.computeLuminance() > 0.8
                 ? Colors.black.withOpacity(0.8)
                 : Colors.white,
           ),
         ),
         backgroundColor: _appBarColor,
         //if color is dark white text if lighter color black text
-        foregroundColor: _appBarColor.computeLuminance() > 0.5
+        foregroundColor: _appBarColor.computeLuminance() > 0.8
             ? Colors.black.withOpacity(0.8)
             : Colors.white,
       ),
@@ -298,6 +348,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                             .update(widget.event, updatedEvent);
                       }
                       Navigator.of(context).pop();
+                      editEvent();
                     },
                     child: Text('Save Changes'),
                   ),
@@ -314,7 +365,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               .controller
               .remove(widget.event);
           Navigator.of(context).pop();
-          deleteEvent();
+          deleteEventsByTitle(widget.event.title);
         },
         child: Icon(Icons.delete),
       ),

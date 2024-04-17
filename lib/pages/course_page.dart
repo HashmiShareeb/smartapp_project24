@@ -23,31 +23,33 @@ class _CoursePageState extends State<CoursePage> {
     displayEvents(); // Call function to fetch events from Firestore
   }
 
-  void displayEvents() {
+  void displayEvents() async {
     db
         .collection(
             'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
         .get()
-        .then((QuerySnapshot querySnapshot) {
-      setState(() {
-        // Clear previous events
-        events.clear();
+        .then(
+      (QuerySnapshot querySnapshot) {
+        setState(() {
+          // Clear previous events
+          events.clear();
 
-        // Iterate over documents and add events to the list
-        querySnapshot.docs.forEach((doc) {
-          events.add(
-            CalendarEventData(
-              date: (doc['date'] as Timestamp).toDate(),
-              startTime: (doc['startTime'] as Timestamp).toDate(),
-              endTime: (doc['endTime'] as Timestamp).toDate(),
-              title: doc['title'] ?? '',
-              description: doc['description'] ?? '',
-              color: Color(doc['color'] ?? Colors.lightBlue),
-            ),
-          );
+          // Iterate over documents and add events to the list
+          querySnapshot.docs.forEach((doc) {
+            events.add(
+              CalendarEventData(
+                date: (doc['date'] as Timestamp).toDate(),
+                startTime: (doc['startTime'] as Timestamp).toDate(),
+                endTime: (doc['endTime'] as Timestamp).toDate(),
+                title: doc['title'] ?? '',
+                description: doc['description'] ?? '',
+                color: Color(doc['color'] ?? Colors.lightBlue),
+              ),
+            );
+          });
         });
-      });
-    });
+      },
+    );
   }
 
   @override
@@ -66,14 +68,6 @@ class _CoursePageState extends State<CoursePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Today',
-                      style: TextStyle(
-                        color: Colors.lightBlue[500],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                     RichText(
                       textAlign: TextAlign.start,
                       text: TextSpan(
@@ -96,6 +90,15 @@ class _CoursePageState extends State<CoursePage> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        displayEvents();
+                      },
+                      icon: Icon(
+                        Icons.refresh_rounded,
+                        color: Colors.lightBlue[500],
                       ),
                     ),
                   ],
@@ -152,7 +155,7 @@ class _CoursePageState extends State<CoursePage> {
                       child: Text(
                         event.title[0].toUpperCase(),
                         style: TextStyle(
-                          color: event.color.computeLuminance() > 0.5
+                          color: event.color.computeLuminance() > 0.8
                               ? Colors.black
                               : Colors.white,
                           fontWeight: FontWeight.bold,
@@ -166,7 +169,7 @@ class _CoursePageState extends State<CoursePage> {
                           : Colors.white,
                       size: 20,
                     ),
-                    tileColor: event.color,
+                    tileColor: event.color.withOpacity(0.6),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     onTap: () {

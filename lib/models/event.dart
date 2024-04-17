@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Event {
-  //final String id;
+  // final String id;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
   final String event;
@@ -25,13 +25,14 @@ class Event {
 
   static Event fromMap(Map<String, dynamic> data) {
     return Event(
+      // id: data['id'],
       startTime: data['startTime'],
       endTime: data['endTime'],
       event: data['event'],
       title: data['title'],
       description: data['description'],
       date: data['date'],
-      color: data['color'],
+      color: Color(data['color']),
 
       // location: data['location'],
     );

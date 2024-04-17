@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: Colors.grey[100],
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.lightBlue[900],
+            backgroundColor: Colors.lightBlue[800],
             titleTextStyle: TextStyle(
               color: Colors.lightBlue[50],
               fontSize: 20,
