@@ -21,45 +21,7 @@ class _TimeTableDataState extends State<TimeTableData> {
   void initState() {
     super.initState();
     _selectedIndex = 0;
-    _fetchEventsFromFirestore();
-  }
-
-  Future<void> _fetchEventsFromFirestore() async {
-    try {
-      CollectionReference eventsCollection = FirebaseFirestore.instance
-          .collection(
-              'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
-
-      QuerySnapshot eventsSnapshot = await eventsCollection.get();
-
-      List<CalendarEventData> firestoreEvents = eventsSnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        DateTime date = data['date'].toDate();
-        DateTime startTime = data['startTime'].toDate();
-        DateTime endTime = data['endTime'].toDate();
-        String title = data['title'];
-        String description = data['description'];
-        String color = data['color'];
-
-        return CalendarEventData(
-          date: date,
-          startTime: startTime,
-          endTime: endTime,
-          title: title,
-          description: description,
-          color: Color(
-            int.parse(color),
-          ),
-        );
-      }).toList();
-
-      setState(() {
-        _events.addAll(firestoreEvents);
-      });
-    } catch (error) {
-      print('Error fetching events from Firestore: $error');
-      // Handle error accordingly
-    }
+    // _fetchEventsFromFirestore();
   }
 
   @override
