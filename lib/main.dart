@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:calendar_view/calendar_view.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/firebase_options.dart';
@@ -14,6 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(MainApp(events: _events));
 }
 
@@ -132,12 +134,5 @@ List<CalendarEventData> _events = [
     endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
     title: "Frontend Development",
     description: "Theorie Next.js and tailwindcss",
-  ),
-  CalendarEventData(
-    date: _now,
-    startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
-    endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
-    title: "SmartApp Development",
-    description: "Flutter deployment and firebase integration",
   ),
 ];

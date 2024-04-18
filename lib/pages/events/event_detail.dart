@@ -73,39 +73,31 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   //edit event
-  void editEvent() async {
-    await db
-        .collection(
-            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
-        .doc()
-        .update({
-          'date': _selectedDate,
-          'title': _titleController.text,
-          'description': _descriptionController.text,
-          'startTime': DateTime(
-            _selectedDate.year,
-            _selectedDate.month,
-            _selectedDate.day,
-            _selectedTime.hour,
-            _selectedTime.minute,
-          ),
-          'endTime': DateTime(
-            _selectedDate.year,
-            _selectedDate.month,
-            _selectedDate.day,
-            _selectedEndTime.hour,
-            _selectedEndTime.minute,
-          ),
-          'color': Color(
-                  int.parse(_selectedColor.value.toRadixString(16), radix: 16))
-              .value,
-        })
-        .then(
-          (value) => print('Event updated'),
-        )
-        .catchError(
-          (error) => print('Failed to update event: $error'),
-        );
+  Future<void> editEvent(
+    String title,
+    String description,
+    DateTime date,
+    DateTime startTime,
+    DateTime endTime,
+    int color,
+  ) async {
+    final collectionRef = db.collection(
+        'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+    final querySnapshot =
+        await collectionRef.where('title', isEqualTo: widget.event.title).get();
+
+    querySnapshot.docChanges.forEach((change) {
+      change.doc.reference.update({
+        'title': title,
+        'description': description,
+        'date': date,
+        'startTime': startTime,
+        'endTime': endTime,
+        'color': color,
+      });
+    });
+
+    print('Event edited');
   }
 
   Future<void> _pickStartTime(BuildContext context) async {
@@ -114,16 +106,18 @@ class _EventDetailPageState extends State<EventDetailPage> {
       initialTime: _selectedTime,
     );
     if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-        // Ensure end time is at least one hour ahead of start time
-        if (_selectedTime.hour + 1 >= 24) {
-          _selectedEndTime = TimeOfDay(hour: 0, minute: _selectedTime.minute);
-        } else {
-          _selectedEndTime = TimeOfDay(
-              hour: _selectedTime.hour + 1, minute: _selectedTime.minute);
-        }
-      });
+      setState(
+        () {
+          _selectedTime = picked;
+          // Ensure end time is at least one hour ahead of start time
+          if (_selectedTime.hour + 1 >= 24) {
+            _selectedEndTime = TimeOfDay(hour: 0, minute: _selectedTime.minute);
+          } else {
+            _selectedEndTime = TimeOfDay(
+                hour: _selectedTime.hour + 1, minute: _selectedTime.minute);
+          }
+        },
+      );
     }
   }
 
@@ -348,7 +342,26 @@ class _EventDetailPageState extends State<EventDetailPage> {
                             .update(widget.event, updatedEvent);
                       }
                       Navigator.of(context).pop();
-                      editEvent();
+                      editEvent(
+                        _titleController.text,
+                        _descriptionController.text,
+                        _selectedDate,
+                        DateTime(
+                          _selectedDate.year,
+                          _selectedDate.month,
+                          _selectedDate.day,
+                          _selectedTime.hour,
+                          _selectedTime.minute,
+                        ),
+                        DateTime(
+                          _selectedDate.year,
+                          _selectedDate.month,
+                          _selectedDate.day,
+                          _selectedEndTime.hour,
+                          _selectedEndTime.minute,
+                        ),
+                        _selectedColor.value,
+                      );
                     },
                     child: Text('Save Changes'),
                   ),
@@ -358,6 +371,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
         ),
       ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your code here
@@ -368,7 +382,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
           deleteEventsByTitle(widget.event.title);
         },
         child: Icon(Icons.delete),
+        shape: const CircleBorder(),
       ),
+      //save button
     );
   }
 }

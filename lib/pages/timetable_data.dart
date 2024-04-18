@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 import 'package:smartapp_project24/pages/events/event_form.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TimeTableData extends StatefulWidget {
   const TimeTableData({Key? key}) : super(key: key);
@@ -13,17 +15,51 @@ class TimeTableData extends StatefulWidget {
 
 class _TimeTableDataState extends State<TimeTableData> {
   late int _selectedIndex;
+  List<CalendarEventData> _events = [];
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = 0;
+    _fetchEventsFromFirestore();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _selectedIndex = 0;
+  Future<void> _fetchEventsFromFirestore() async {
+    try {
+      CollectionReference eventsCollection = FirebaseFirestore.instance
+          .collection(
+              'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+
+      QuerySnapshot eventsSnapshot = await eventsCollection.get();
+
+      List<CalendarEventData> firestoreEvents = eventsSnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        DateTime date = data['date'].toDate();
+        DateTime startTime = data['startTime'].toDate();
+        DateTime endTime = data['endTime'].toDate();
+        String title = data['title'];
+        String description = data['description'];
+        String color = data['color'];
+
+        return CalendarEventData(
+          date: date,
+          startTime: startTime,
+          endTime: endTime,
+          title: title,
+          description: description,
+          color: Color(
+            int.parse(color),
+          ),
+        );
+      }).toList();
+
+      setState(() {
+        _events.addAll(firestoreEvents);
+      });
+    } catch (error) {
+      print('Error fetching events from Firestore: $error');
+      // Handle error accordingly
+    }
   }
 
   @override
@@ -56,31 +92,26 @@ class _TimeTableDataState extends State<TimeTableData> {
             ],
           ),
           const SizedBox(width: 12),
-          CircleAvatar(
-            backgroundColor:
-                Colors.lightBlue.withOpacity(0.5), // Set background color
-            foregroundColor: Colors.lightBlue[50],
-            child: IconButton(
-              icon: const Icon(
-                Icons.add_circle_outline_rounded,
-              ),
-              onPressed: () async {
-                final event = await Navigator.push<CalendarEventData>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EventFormPage(),
-                    fullscreenDialog: true,
-                  ),
-                );
-
-                // If an event was returned, add it to the EventController
-                if (event != null) {
-                  CalendarControllerProvider.of(context).controller.add(event);
-                }
-              },
+          IconButton(
+            icon: const Icon(
+              Icons.add_circle_outline_rounded,
+              size: 25.0,
             ),
+            onPressed: () async {
+              final event = await Navigator.push<CalendarEventData>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EventFormPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+
+              if (event != null) {
+                CalendarControllerProvider.of(context).controller.add(event);
+              }
+            },
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
         ],
       ),
       body: Column(
@@ -93,27 +124,38 @@ class _TimeTableDataState extends State<TimeTableData> {
                 DayView(
                   dateStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
+                  onEventTap: (event, date) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EventDetailPage(event: event as CalendarEventData),
+                      ),
+                    );
+                  },
                   eventTileBuilder: (date, events, boundry, start, end) {
-                    // Return a GestureDetector to enable tapping on the event tile
-                    if (events.length == 1 &&
-                        events[0]
-                                .endTime!
-                                .difference(events[0].startTime!)
-                                .inHours ==
+                    if (events.isEmpty) {
+                      return Container();
+                    }
+
+                    final event = events.first;
+
+                    if (event != null &&
+                        event.endTime!.difference(event.startTime!).inHours ==
                             1) {
                       return Container(
                         width: double.infinity,
                         height: double.infinity,
                         padding: EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
-                          color: events[0].color,
+                          color: event.color,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              events[0].title,
+                              event.title,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -123,65 +165,64 @@ class _TimeTableDataState extends State<TimeTableData> {
                           ],
                         ),
                       );
-                    }
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to event detail page when tile is tapped
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EventDetailPage(event: events[0]),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        padding: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: events[0].color,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Material(
-                          color:
-                              Colors.transparent, // Make material transparent
-                          child: InkWell(
-                            splashColor: Colors.lightBlue
-                                .withOpacity(0.5), // Set splash color
+                    } else {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EventDetailPage(event: event),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          padding: EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: event.color,
                             borderRadius: BorderRadius.circular(5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  events[0].title,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                          ),
+                          child: Material(
+                            color:
+                                Colors.transparent, // Make material transparent
+                            child: InkWell(
+                              splashColor: Colors.lightBlue.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    event.title,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  events[0].description ?? '',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
+                                  Text(
+                                    event.description ?? '',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '${DateFormat('HH:mm').format(events[0].startTime!)} - ${DateFormat('HH:mm').format(events[0].endTime ?? DateTime.now())}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
+                                  Text(
+                                    '${DateFormat('HH:mm').format(event.startTime!)} - ${DateFormat('HH:mm').format(event.endTime ?? DateTime.now())}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   // To Hide day header
                 ),
@@ -202,8 +243,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                     // Implement callback when user taps on a cell.
                     print(events);
                   },
-                  startDay:
-                      WeekDays.monday, // To change the first day of the week.
+                  startDay: WeekDays.monday,
                   // This callback will only work if cellBuilder is null.
                   onEventTap: (event, date) => print(event),
                   onDateLongPress: (date) => print(date),
@@ -213,7 +253,6 @@ class _TimeTableDataState extends State<TimeTableData> {
           ),
         ],
       ),
-      //plus button to add new timetable item eventcontroller
     );
   }
 }

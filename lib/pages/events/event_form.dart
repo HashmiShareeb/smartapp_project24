@@ -224,40 +224,6 @@ class _EventFormPageState extends State<EventFormPage> {
                 ),
                 onTap: _pickColor,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  final event = CalendarEventData(
-                    date: _selectedDate,
-                    event: _titleController.text,
-                    title: _titleController.text,
-                    description: _descriptionController.text,
-                    startTime: DateTime(
-                      _selectedDate.year,
-                      _selectedDate.month,
-                      _selectedDate.day,
-                      _selectedTime.hour,
-                      _selectedTime.minute,
-                    ),
-                    endTime: DateTime(
-                      _selectedDate.year,
-                      _selectedDate.month,
-                      _selectedDate.day,
-                      _selectedEndTime.hour,
-                      _selectedEndTime.minute,
-                    ),
-                    color: Color(int.parse(
-                        _selectedColor.value.toRadixString(16),
-                        radix: 16)),
-                  );
-
-                  CalendarControllerProvider.of(context).controller.add(event);
-
-                  Navigator.pop(context); // Navigate back to the previous page
-
-                  addEvent();
-                },
-                child: Text('Add Event'),
-              ),
             ],
           ),
         ),
@@ -293,6 +259,7 @@ class _EventFormPageState extends State<EventFormPage> {
           addEvent();
         },
         child: const Icon(Icons.add),
+        shape: const CircleBorder(),
       ),
     );
   }
