@@ -90,8 +90,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            EventDetailPage(event: event as CalendarEventData),
+                        builder: (context) => EventDetailPage(event: event[0]),
                       ),
                     );
                   },
