@@ -3,6 +3,8 @@
 import 'dart:ui';
 
 import 'package:calendar_view/calendar_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/firebase_options.dart';
@@ -15,16 +17,18 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MainApp(events: _events));
+  final events = await fetchEventsFromFirestore();
+  runApp(MainApp(events: events));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key, required List<CalendarEventData<Object?>> events});
+  final List<CalendarEventData> events;
+  const MainApp({super.key, required this.events});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return CalendarControllerProvider(
-      controller: EventController()..addAll(_events),
+      controller: EventController()..addAll(events),
       child: MaterialApp(
         themeAnimationCurve: Curves.easeInOutCubic,
         //navigation theme
@@ -126,12 +130,43 @@ Future<int> yourEventSorterFunction<T>(
   return 0;
 }
 
+//hardcoded events
 List<CalendarEventData> _events = [
   CalendarEventData(
     date: _now,
-    startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
-    endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
+    startTime: DateTime(_now.year, 4, 16, 10, 45),
+    endTime: DateTime(_now.year, 4, 16, 12, 45),
     title: "Frontend Development",
     description: "Theorie Next.js and tailwindcss",
   ),
+  CalendarEventData(
+    date: _now,
+    startTime: DateTime(_now.year, 4, 16, 13, 45),
+    endTime: DateTime(_now.year, 4, 16, 17, 45),
+    title: "SmartApp Development",
+    description: "flutter and firebase",
+  ),
 ];
+
+Future<List<CalendarEventData>> fetchEventsFromFirestore() async {
+  if (FirebaseAuth.instance.currentUser == null) {
+    return _events;
+  }
+  final eventsCollection = FirebaseFirestore.instance.collection(
+      'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+
+  final querySnapshot = await eventsCollection.get();
+
+  final events = querySnapshot.docs.map((doc) {
+    final data = doc.data();
+    return CalendarEventData(
+      date: data['date'].toDate(),
+      startTime: data['startTime'].toDate(),
+      endTime: data['endTime'].toDate(),
+      title: data['title'],
+      description: data['description'],
+    );
+  }).toList();
+
+  return [..._events, ...events];
+}
