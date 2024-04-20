@@ -18,6 +18,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late DateTime _selectedDate;
+  late DateTime _selectedEndDate;
   late TimeOfDay _selectedTime;
   late TimeOfDay _selectedEndTime;
   late Color _selectedColor;
@@ -30,6 +31,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     _descriptionController =
         TextEditingController(text: widget.event.description);
     _selectedDate = widget.event.date;
+    _selectedEndDate = widget.event.date;
     _selectedTime = TimeOfDay.fromDateTime(widget.event.startTime!);
     _selectedEndTime = TimeOfDay.fromDateTime(widget.event.endTime!);
     _selectedColor = widget.event.color;
@@ -44,20 +46,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   final db = FirebaseFirestore.instance;
-  // Future<void> deleteAllEvents() async {
-  //   final collectionRef = db.collection(
-  //       'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
-  //   final batch = db.batch();
-
-  //   // Get all documents in batches (optional for large collections)
-  //   await collectionRef.get().then((querySnapshot) {
-  //     querySnapshot.docChanges.forEach((change) {
-  //       batch.delete(change.doc.reference);
-  //     });
-  //   });
-
-  //   await batch.commit().then((_) => print('All events deleted'));
-  // }
 
   Future<void> deleteEventsByTitle(String title) async {
     final collectionRef = db.collection(
@@ -72,11 +60,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
     print('Events with title: $title deleted');
   }
 
-  //edit event
   Future<void> editEvent(
     String title,
     String description,
-    DateTime date,
+    DateTime startDate,
+    DateTime endDate,
     DateTime startTime,
     DateTime endTime,
     int color,
@@ -90,7 +78,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
       change.doc.reference.update({
         'title': title,
         'description': description,
-        'date': date,
+        'startDate': startDate,
+        'endDate': endDate,
         'startTime': startTime,
         'endTime': endTime,
         'color': color,
@@ -183,6 +172,92 @@ class _EventDetailPageState extends State<EventDetailPage> {
             Navigator.of(context).pop();
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              if (_selectedDate != widget.event.date ||
+                  _selectedEndDate != widget.event.date) {
+                // Remove the event from the previous date
+                CalendarControllerProvider.of(context)
+                    .controller
+                    .remove(widget.event);
+                // Add the event to the new date range
+                final updatedEvent = widget.event.copyWith(
+                  title: _titleController.text,
+                  description: _descriptionController.text,
+                  date: _selectedDate,
+                  endDate: _selectedEndDate,
+                  startTime: DateTime(
+                    _selectedDate.year,
+                    _selectedDate.month,
+                    _selectedDate.day,
+                    _selectedTime.hour,
+                    _selectedTime.minute,
+                  ),
+                  endTime: DateTime(
+                    _selectedEndDate.year,
+                    _selectedEndDate.month,
+                    _selectedEndDate.day,
+                    _selectedEndTime.hour,
+                    _selectedEndTime.minute,
+                  ),
+                  color: _selectedColor,
+                );
+                CalendarControllerProvider.of(context)
+                    .controller
+                    .add(updatedEvent);
+              } else {
+                // If the date remains the same, simply update the event
+                final updatedEvent = widget.event.copyWith(
+                  title: _titleController.text,
+                  description: _descriptionController.text,
+                  startTime: DateTime(
+                    _selectedDate.year,
+                    _selectedDate.month,
+                    _selectedDate.day,
+                    _selectedTime.hour,
+                    _selectedTime.minute,
+                  ),
+                  endTime: DateTime(
+                    _selectedEndDate.year,
+                    _selectedEndDate.month,
+                    _selectedEndDate.day,
+                    _selectedEndTime.hour,
+                    _selectedEndTime.minute,
+                  ),
+                  color: _selectedColor,
+                );
+                CalendarControllerProvider.of(context)
+                    .controller
+                    .update(widget.event, updatedEvent);
+              }
+              Navigator.of(context).pop();
+              editEvent(
+                _titleController.text,
+                _descriptionController.text,
+                _selectedDate,
+                _selectedEndDate,
+                DateTime(
+                  _selectedDate.year,
+                  _selectedDate.month,
+                  _selectedDate.day,
+                  _selectedTime.hour,
+                  _selectedTime.minute,
+                ),
+                DateTime(
+                  _selectedEndDate.year,
+                  _selectedEndDate.month,
+                  _selectedEndDate.day,
+                  _selectedEndTime.hour,
+                  _selectedEndTime.minute,
+                ),
+                _selectedColor.value,
+              );
+            },
+          ),
+          SizedBox(width: 10),
+        ],
         title: Text(
           widget.event.title,
           style: TextStyle(
@@ -192,7 +267,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
         ),
         backgroundColor: _appBarColor,
-        //if color is dark white text if lighter color black text
         foregroundColor: _appBarColor.computeLuminance() > 0.8
             ? Colors.black.withOpacity(0.8)
             : Colors.white,
@@ -241,7 +315,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
               ),
               const SizedBox(height: 16),
               ListTile(
-                title: Text('Date'),
+                title: Text('Start Date'),
                 trailing: Text(
                   DateFormat("dd/MM/yyyy").format(_selectedDate),
                 ),
@@ -255,6 +329,25 @@ class _EventDetailPageState extends State<EventDetailPage> {
                   if (picked != null && picked != _selectedDate) {
                     setState(() {
                       _selectedDate = picked;
+                    });
+                  }
+                },
+              ),
+              ListTile(
+                title: Text('End Date'),
+                trailing: Text(
+                  DateFormat("dd/MM/yyyy").format(_selectedEndDate),
+                ),
+                onTap: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedEndDate,
+                    firstDate: DateTime(2021),
+                    lastDate: DateTime(2025),
+                  );
+                  if (picked != null && picked != _selectedEndDate) {
+                    setState(() {
+                      _selectedEndDate = picked;
                     });
                   }
                 },
@@ -287,16 +380,18 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      if (_selectedDate != widget.event.date) {
+                      if (_selectedDate != widget.event.date ||
+                          _selectedEndDate != widget.event.date) {
                         // Remove the event from the previous date
                         CalendarControllerProvider.of(context)
                             .controller
                             .remove(widget.event);
-                        // Add the event to the new date
+                        // Add the event to the new date range
                         final updatedEvent = widget.event.copyWith(
                           title: _titleController.text,
                           description: _descriptionController.text,
                           date: _selectedDate,
+                          endDate: _selectedEndDate,
                           startTime: DateTime(
                             _selectedDate.year,
                             _selectedDate.month,
@@ -305,9 +400,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
                             _selectedTime.minute,
                           ),
                           endTime: DateTime(
-                            _selectedDate.year,
-                            _selectedDate.month,
-                            _selectedDate.day,
+                            _selectedEndDate.year,
+                            _selectedEndDate.month,
+                            _selectedEndDate.day,
                             _selectedEndTime.hour,
                             _selectedEndTime.minute,
                           ),
@@ -329,9 +424,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
                             _selectedTime.minute,
                           ),
                           endTime: DateTime(
-                            _selectedDate.year,
-                            _selectedDate.month,
-                            _selectedDate.day,
+                            _selectedEndDate.year,
+                            _selectedEndDate.month,
+                            _selectedEndDate.day,
                             _selectedEndTime.hour,
                             _selectedEndTime.minute,
                           ),
@@ -346,6 +441,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                         _titleController.text,
                         _descriptionController.text,
                         _selectedDate,
+                        _selectedEndDate,
                         DateTime(
                           _selectedDate.year,
                           _selectedDate.month,
@@ -354,9 +450,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
                           _selectedTime.minute,
                         ),
                         DateTime(
-                          _selectedDate.year,
-                          _selectedDate.month,
-                          _selectedDate.day,
+                          _selectedEndDate.year,
+                          _selectedEndDate.month,
+                          _selectedEndDate.day,
                           _selectedEndTime.hour,
                           _selectedEndTime.minute,
                         ),
@@ -371,10 +467,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your code here
           CalendarControllerProvider.of(context)
               .controller
               .remove(widget.event);
@@ -384,7 +478,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
         child: Icon(Icons.delete),
         shape: const CircleBorder(),
       ),
-      //save button
     );
   }
 }

@@ -38,17 +38,20 @@ class _CoursePageState extends State<CoursePage> {
           querySnapshot.docs.forEach((doc) {
             events.add(
               CalendarEventData(
-                date: (doc['date'] as Timestamp).toDate(),
+                date: (doc['startDate'] as Timestamp).toDate(),
                 startTime: (doc['startTime'] as Timestamp).toDate(),
                 endTime: (doc['endTime'] as Timestamp).toDate(),
                 title: doc['title'] ?? '',
                 description: doc['description'] ?? '',
                 color: Color(doc['color'] ?? Colors.lightBlue),
+                endDate: (doc['endDate'] as Timestamp).toDate(),
               ),
             );
           });
         });
       },
+    ).catchError(
+      (error) => print('Failed to fetch events: $error'),
     );
   }
 

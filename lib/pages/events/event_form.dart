@@ -20,19 +20,11 @@ class EventFormPage extends StatefulWidget {
 class _EventFormPageState extends State<EventFormPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay.now();
-  TimeOfDay _selectedEndTime = TimeOfDay.now();
-
-  // final event = Event(
-  //   id: FirebaseAuth.instance.currentUser!.uid,
-  //   date: DateTime.now(),
-  //   title: '',
-  //   event: '',
-  //   description: '',
-  //   startTime: TimeOfDay.now(),
-  //   endTime: TimeOfDay.now(),
-  // );
+  DateTime _selectedStartDate = DateTime.now();
+  DateTime _selectedEndDate = DateTime.now().add(Duration(hours: 1));
+  TimeOfDay _selectedStartTime = TimeOfDay.now();
+  TimeOfDay _selectedEndTime =
+      TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1);
 
   final db = FirebaseFirestore.instance;
   void addEvent() async {
@@ -40,20 +32,21 @@ class _EventFormPageState extends State<EventFormPage> {
         .collection(
             'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
         .add({
-          'date': _selectedDate,
+          'startDate': _selectedStartDate,
+          'endDate': _selectedEndDate,
           'title': _titleController.text,
           'description': _descriptionController.text,
           'startTime': DateTime(
-            _selectedDate.year,
-            _selectedDate.month,
-            _selectedDate.day,
-            _selectedTime.hour,
-            _selectedTime.minute,
+            _selectedStartDate.year,
+            _selectedStartDate.month,
+            _selectedStartDate.day,
+            _selectedStartTime.hour,
+            _selectedStartTime.minute,
           ),
           'endTime': DateTime(
-            _selectedDate.year,
-            _selectedDate.month,
-            _selectedDate.day,
+            _selectedEndDate.year,
+            _selectedEndDate.month,
+            _selectedEndDate.day,
             _selectedEndTime.hour,
             _selectedEndTime.minute,
           ),
@@ -67,47 +60,52 @@ class _EventFormPageState extends State<EventFormPage> {
         .catchError(
           (error) => print('Failed to add event: $error'),
         );
-
-    //if event added show snackbar
   }
 
   //datepicker void
-  Future<void> _datePicker(BuildContext context) async {
+  Future<void> _datePicker(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: isStartDate ? _selectedStartDate : _selectedEndDate,
       firstDate: DateTime(2021),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != DateTime.now()) {
+    if (picked != null) {
       setState(() {
-        _selectedDate = picked;
+        if (isStartDate) {
+          _selectedStartDate = picked;
+          // Ensure end date is always after start date
+          if (_selectedEndDate.isBefore(_selectedStartDate)) {
+            _selectedEndDate = _selectedStartDate.add(Duration(hours: 1));
+          }
+        } else {
+          _selectedEndDate = picked;
+        }
       });
     }
   }
 
   //timepicker void
-  Future<void> _pickStartTime(BuildContext context) async {
+  Future<void> _pickTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: isStartTime ? _selectedStartTime : _selectedEndTime,
     );
-    if (picked != null && picked != TimeOfDay.now()) {
+    if (picked != null) {
       setState(() {
-        _selectedTime = picked;
-      });
-    }
-  }
-
-  //timepicker void
-  Future<void> _pickEndTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null && picked != TimeOfDay.now()) {
-      setState(() {
-        _selectedEndTime = picked;
+        if (isStartTime) {
+          _selectedStartTime = picked;
+          // Ensure end time is always after start time
+          // Check if the end time is on the next day
+          if (_selectedEndTime.hour >= 24) {
+            _selectedEndTime = TimeOfDay(
+              hour: _selectedEndTime.hour % 24,
+              minute: _selectedEndTime.minute,
+            );
+          }
+        } else {
+          _selectedEndTime = picked;
+        }
       });
     }
   }
@@ -196,27 +194,39 @@ class _EventFormPageState extends State<EventFormPage> {
               ),
               const SizedBox(height: 16),
               ListTile(
-                title: Text('Date'),
+                leading: Icon(Icons.calendar_today_rounded),
+                title: Text('Start Date'),
                 trailing: Text(
-                  DateFormat("dd/MM/yyyy").format(_selectedDate),
+                  DateFormat("dd/MM/yyyy").format(_selectedStartDate),
                 ),
-                onTap: () => _datePicker(context),
+                onTap: () => _datePicker(context, true),
               ),
               ListTile(
+                leading: Icon(Icons.calendar_month_rounded),
+                title: Text('End Date'),
+                trailing: Text(
+                  DateFormat("dd/MM/yyyy").format(_selectedEndDate),
+                ),
+                onTap: () => _datePicker(context, false),
+              ),
+              ListTile(
+                leading: Icon(Icons.access_time_filled_outlined),
                 title: Text('Start Time'),
                 trailing: Text(
-                  _selectedTime.format(context),
+                  _selectedStartTime.format(context),
                 ),
-                onTap: () => _pickStartTime(context),
+                onTap: () => _pickTime(context, true),
               ),
               ListTile(
+                leading: Icon(Icons.access_time_filled),
                 title: Text('End Time'),
                 trailing: Text(
                   _selectedEndTime.format(context),
                 ),
-                onTap: () => _pickEndTime(context),
+                onTap: () => _pickTime(context, false),
               ),
               ListTile(
+                leading: Icon(Icons.color_lens_rounded),
                 title: const Text('Color'),
                 trailing: CircleAvatar(
                   backgroundColor: _selectedColor,
@@ -234,21 +244,22 @@ class _EventFormPageState extends State<EventFormPage> {
           CalendarControllerProvider.of(context)
               .controller
               .add(CalendarEventData(
-                date: _selectedDate,
+                date: _selectedStartDate,
+                endDate: _selectedEndDate,
                 event: _titleController.text,
                 title: _titleController.text,
                 description: _descriptionController.text,
                 startTime: DateTime(
-                  _selectedDate.year,
-                  _selectedDate.month,
-                  _selectedDate.day,
-                  _selectedTime.hour,
-                  _selectedTime.minute,
+                  _selectedStartDate.year,
+                  _selectedStartDate.month,
+                  _selectedStartDate.day,
+                  _selectedStartTime.hour,
+                  _selectedStartTime.minute,
                 ),
                 endTime: DateTime(
-                  _selectedDate.year,
-                  _selectedDate.month,
-                  _selectedDate.day,
+                  _selectedEndDate.year,
+                  _selectedEndDate.month,
+                  _selectedEndDate.day,
                   _selectedEndTime.hour,
                   _selectedEndTime.minute,
                 ),

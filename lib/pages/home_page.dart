@@ -85,11 +85,11 @@ class _HomePageState extends State<HomePage> {
             selectedIcon: Icon(Icons.calendar_today),
             label: 'Timetable',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book),
-            label: 'Courses',
-          ),
+          // NavigationDestination(
+          //   icon: Icon(Icons.menu_book_outlined),
+          //   selectedIcon: Icon(Icons.menu_book),
+          //   label: 'Courses',
+          // ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
             selectedIcon: Icon(Icons.person),
@@ -102,8 +102,8 @@ class _HomePageState extends State<HomePage> {
           : _selectedIndex == 1
               ? TimeTableData()
               : _selectedIndex == 2
-                  ? TasksPage()
-                  : ProfilePage(),
+                  ? ProfilePage()
+                  : null,
     );
   }
 }

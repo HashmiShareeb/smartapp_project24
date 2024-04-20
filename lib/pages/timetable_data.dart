@@ -38,25 +38,35 @@ class _TimeTableDataState extends State<TimeTableData> {
                 _selectedIndex = newIndex!;
               });
             },
+            dropdownColor: Colors.lightBlue[800],
             items: [
               DropdownMenuItem<int>(
                 value: 0,
-                child: Text('Day'),
+                child: Text(
+                  'Day',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               DropdownMenuItem<int>(
                 value: 1,
-                child: Text('Week'),
+                child: Text(
+                  'Week',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               DropdownMenuItem<int>(
                 value: 2,
-                child: Text('Month'),
+                child: Text(
+                  'Month',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
           const SizedBox(width: 12),
           IconButton(
             icon: const Icon(
-              Icons.add_circle_outline_rounded,
+              Icons.add,
               size: 25.0,
             ),
             onPressed: () async {

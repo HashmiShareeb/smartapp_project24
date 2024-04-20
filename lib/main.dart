@@ -160,11 +160,12 @@ Future<List<CalendarEventData>> fetchEventsFromFirestore() async {
   final events = querySnapshot.docs.map((doc) {
     final data = doc.data();
     return CalendarEventData(
-      date: data['date'].toDate(),
+      date: data['startDate'].toDate(),
       startTime: data['startTime'].toDate(),
       endTime: data['endTime'].toDate(),
       title: data['title'],
       description: data['description'],
+      endDate: data['endDate'].toDate(),
     );
   }).toList();
 
