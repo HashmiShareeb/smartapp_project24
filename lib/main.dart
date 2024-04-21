@@ -133,18 +133,34 @@ Future<int> yourEventSorterFunction<T>(
 //hardcoded events
 List<CalendarEventData> _events = [
   CalendarEventData(
-    date: _now,
-    startTime: DateTime(_now.year, 4, 16, 10, 45),
-    endTime: DateTime(_now.year, 4, 16, 12, 45),
+    date: DateTime(2024, 4, 22),
     title: "Frontend Development",
-    description: "Theorie Next.js and tailwindcss",
+    description: "nextjs and tailwindcss",
+    startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
   ),
   CalendarEventData(
-    date: _now,
-    startTime: DateTime(_now.year, 4, 16, 13, 45),
-    endTime: DateTime(_now.year, 4, 16, 17, 45),
+    date: DateTime(2024, 4, 23),
+    startTime: DateTime(_now.year, _now.month, _now.day, 10, 30),
+    endTime: DateTime(_now.year, _now.month, _now.day, 12, 30),
     title: "SmartApp Development",
-    description: "flutter and firebase",
+    description: "Flutter and Firebase intergrations.",
+  ),
+  CalendarEventData(
+    date: DateTime(2024, 4, 24),
+    startTime: DateTime(_now.year, _now.month, _now.day, 8, 30),
+    endTime: DateTime(_now.year, _now.month, _now.day, 12, 30),
+    title: "Frontend Development",
+    description: "Labo nextjs",
+  ),
+  CalendarEventData(
+    date: _now.add(Duration(days: 3)),
+    startTime: DateTime(_now.add(Duration(days: 3)).year,
+        _now.add(Duration(days: 3)).month, _now.add(Duration(days: 3)).day, 10),
+    endTime: DateTime(_now.add(Duration(days: 3)).year,
+        _now.add(Duration(days: 3)).month, _now.add(Duration(days: 3)).day, 14),
+    title: "UI/UX Design",
+    description: "Figma and Adobe XD",
   ),
 ];
 

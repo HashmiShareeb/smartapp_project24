@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -63,8 +65,31 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              title: const Text('Profile'),
+              trailing: CircleAvatar(
+                backgroundColor: Colors.orange[300],
+                child: Icon(
+                  Icons.account_circle,
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () {
+                // Navigate to Profile page
+              },
+            ),
+            Divider(
+              color: Colors.grey[300],
+              thickness: 1,
+            ),
+            ListTile(
               title: const Text('Logout'),
-              trailing: Icon(Icons.logout),
+              trailing: CircleAvatar(
+                backgroundColor: Colors.orange[300],
+                child: Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+              ),
               onTap: () {
                 FirebaseAuth.instance.signOut();
               },

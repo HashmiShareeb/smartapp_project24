@@ -116,7 +116,7 @@ class _CoursePageState extends State<CoursePage> {
                 horizontal: 15.0,
               ),
               child: Text(
-                'Events: ${events.length}',
+                'Planned Events: ${events.length}',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 18,
@@ -190,7 +190,60 @@ class _CoursePageState extends State<CoursePage> {
                 },
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                'Classes',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.lightBlue[500],
+                ),
+              ),
+            ),
+            Container(
+              height: 180,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                children: [
+                  lessonsCard('Frontend', Colors.lightBlue),
+                  lessonsCard('Smartapp', Colors.lightBlue),
+                  lessonsCard('Backend', Colors.lightBlue),
+                  lessonsCard('UI/UX', Colors.lightBlue),
+                ],
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+  Widget lessonsCard(String className, Color color) {
+    return GestureDetector(
+      onTap: () {
+        // Add navigation logic here
+        print('Navigating to $className');
+      },
+      child: Container(
+        width: 260,
+        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            className,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color:
+                  color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
         ),
       ),
     );

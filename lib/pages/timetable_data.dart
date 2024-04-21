@@ -1,6 +1,7 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smartapp_project24/main.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 import 'package:smartapp_project24/pages/events/event_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,7 @@ class _TimeTableDataState extends State<TimeTableData> {
     super.initState();
     _selectedIndex = 0;
     // _fetchEventsFromFirestore();
+    fetchEventsFromFirestore();
   }
 
   @override
@@ -195,12 +197,17 @@ class _TimeTableDataState extends State<TimeTableData> {
                       );
                     }
                   },
+                  startHour: 5,
                   // To Hide day header
                 ),
                 WeekView(
                   headerStringBuilder: (date, {secondaryDate}) =>
                       DateFormat('d MMMM yyyy').format(date),
                   startDay: WeekDays.monday,
+                  onEventTap: (event, date) {
+                    print(event);
+                  },
+                  
                 ),
                 MonthView(
                   dateStringBuilder: (date, {secondaryDate}) =>
@@ -210,9 +217,15 @@ class _TimeTableDataState extends State<TimeTableData> {
                   initialMonth: DateTime.now(),
                   cellAspectRatio: 1,
                   onPageChange: (date, pageIndex) => print("$date, $pageIndex"),
-                  onCellTap: (events, date) {
+                  onCellTap: (event, date) {
                     // Implement callback when user taps on a cell.
-                    print(events);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EventDetailPage(event: event[0]),
+                      ),
+                    );
+                    print(event);
                   },
                   startDay: WeekDays.monday,
                   // This callback will only work if cellBuilder is null.
