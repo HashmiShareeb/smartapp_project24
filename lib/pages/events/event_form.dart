@@ -23,8 +23,10 @@ class _EventFormPageState extends State<EventFormPage> {
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now().add(Duration(hours: 1));
   TimeOfDay _selectedStartTime = TimeOfDay.now();
-  TimeOfDay _selectedEndTime =
-      TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1);
+  TimeOfDay _selectedEndTime = TimeOfDay(
+    hour: TimeOfDay.now().hour + 1,
+    minute: TimeOfDay.now().minute,
+  );
 
   final db = FirebaseFirestore.instance;
   void addEvent() async {
@@ -110,7 +112,7 @@ class _EventFormPageState extends State<EventFormPage> {
     }
   }
 
-  Color _selectedColor = Colors.lightBlue; // Default event color
+  Color _selectedColor = Colors.lightBlue;
 
   // Color picker void
   Future<void> _pickColor() async {
@@ -268,7 +270,6 @@ class _EventFormPageState extends State<EventFormPage> {
               ));
           Navigator.pop(context);
           addEvent();
-          
         },
         child: const Icon(Icons.add),
         shape: const CircleBorder(),

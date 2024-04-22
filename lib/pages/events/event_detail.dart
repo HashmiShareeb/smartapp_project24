@@ -390,6 +390,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         child: Icon(Icons.delete),
         shape: const CircleBorder(),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
     );
   }
 }
