@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:smartapp_project24/main.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 
 class CoursePage extends StatefulWidget {
@@ -13,7 +14,7 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
-  List<CalendarEventData> events = []; // Initialize events list
+  final List<CalendarEventData> events = [];
 
   final db = FirebaseFirestore.instance;
 
@@ -220,6 +221,7 @@ class _CoursePageState extends State<CoursePage> {
       ),
     );
   }
+
   Widget lessonsCard(String className, Color color) {
     return GestureDetector(
       onTap: () {

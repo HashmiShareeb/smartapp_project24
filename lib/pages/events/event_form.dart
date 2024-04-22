@@ -268,6 +268,7 @@ class _EventFormPageState extends State<EventFormPage> {
               ));
           Navigator.pop(context);
           addEvent();
+          
         },
         child: const Icon(Icons.add),
         shape: const CircleBorder(),

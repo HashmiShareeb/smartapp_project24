@@ -7,8 +7,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smartapp_project24/firebase_options.dart';
 import 'package:smartapp_project24/pages/auth/login_page.dart';
+import 'package:smartapp_project24/pages/events/events_provider.dart';
 
 DateTime get _now => DateTime.now();
 void main() async {
@@ -17,97 +19,171 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final events = await fetchEventsFromFirestore();
-  runApp(MainApp(events: events));
+  final fetchedEvents = await fetchEventsFromFirestore();
+  final events = fetchedEvents[0]; // Events from Firestore
+  final hardcodedEvents = fetchedEvents[1]; // Hardcoded Events
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => EventProvider(),
+      builder: (context, _) =>
+          MainApp(events: events, hardcodedEvents: hardcodedEvents),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
   final List<CalendarEventData> events;
-  const MainApp({super.key, required this.events});
-  // This widget is the root of your application.
+  final List<CalendarEventData> hardcodedEvents;
+
+  const MainApp({Key? key, required this.events, required this.hardcodedEvents})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return CalendarControllerProvider(
-      controller: EventController()..addAll(events),
-      child: MaterialApp(
-        themeAnimationCurve: Curves.easeInOutCubic,
-        //navigation theme
-        theme: ThemeData(
-          datePickerTheme: DatePickerThemeData(
-            backgroundColor: Colors.white,
-            headerHelpStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-            confirmButtonStyle: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                Colors.orange, // 30% Accent - Button background,
-              ),
-              textStyle: MaterialStateProperty.all(
-                TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-          scaffoldBackgroundColor: Colors.grey[100],
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.lightBlue[800],
-            titleTextStyle: TextStyle(
-              color: Colors.lightBlue[50],
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-            iconTheme: IconThemeData(
-              color: Colors.lightBlue[50],
-              size: 20,
-            ),
-          ),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Colors.orange, // 30% Accent - Button background
-          ),
-          navigationBarTheme: NavigationBarThemeData(
-            backgroundColor: Colors.white,
-            indicatorColor: Colors.lightBlue[100],
-            labelTextStyle: MaterialStateProperty.all(
-              TextStyle(
-                color: Colors.black,
-                fontSize: 12,
-              ),
-            ),
-            iconTheme: MaterialStateProperty.all(
-              IconThemeData(
-                color: Colors.grey[800],
-              ),
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                Colors.orange, // 30% Accent - Button background,
-              ),
-              textStyle: MaterialStateProperty.all(
-                TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
+    return StreamBuilder<List<CalendarEventData>>(
+      stream: listenForEventsFromFirestore(),
+      builder: (context, snapshot) {
+        // Building UI based on snapshot state
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
 
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: const ScrollBehavior().copyWith(
-          dragDevices: {
-            PointerDeviceKind.trackpad,
-            PointerDeviceKind.mouse,
-            PointerDeviceKind.touch,
-          },
-        ),
-        home: LoginPage(),
-      ),
+        if (snapshot.hasData) {
+          // If data is available, combine Firestore events with hardcoded events
+          final firestoreEvents = snapshot.data!;
+          final allEvents = [...firestoreEvents, ..._events]; // Combine events
+
+          // Return MaterialApp with CalendarControllerProvider
+          return CalendarControllerProvider(
+            controller: EventController()..addAll(allEvents),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                datePickerTheme: DatePickerThemeData(
+                  backgroundColor: Colors.white,
+                  headerHelpStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  confirmButtonStyle: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.orange, // 30% Accent - Button background,
+                    ),
+                    textStyle: MaterialStateProperty.all(
+                      TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                scaffoldBackgroundColor: Colors.grey[100],
+                appBarTheme: AppBarTheme(
+                  backgroundColor: Colors.lightBlue[800],
+                  titleTextStyle: TextStyle(
+                    color: Colors.lightBlue[50],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  iconTheme: IconThemeData(
+                    color: Colors.lightBlue[50],
+                    size: 20,
+                  ),
+                ),
+                floatingActionButtonTheme: FloatingActionButtonThemeData(
+                  backgroundColor:
+                      Colors.orange, // 30% Accent - Button background
+                ),
+                navigationBarTheme: NavigationBarThemeData(
+                  backgroundColor: Colors.white,
+                  indicatorColor: Colors.lightBlue[100],
+                  labelTextStyle: MaterialStateProperty.all(
+                    TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                  iconTheme: MaterialStateProperty.all(
+                    IconThemeData(
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                ),
+              ),
+              title: 'SmartApp Project24',
+              scrollBehavior: const ScrollBehavior().copyWith(
+                dragDevices: {
+                  PointerDeviceKind.trackpad,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.touch,
+                },
+              ),
+              home: LoginPage(), // Initial page is LoginPage
+            ),
+          );
+        }
+
+        return CircularProgressIndicator(); // Show loading indicator initially
+      },
     );
   }
+}
+
+Stream<List<CalendarEventData>> listenForEventsFromFirestore() {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return Stream.value([]); // Return an empty list if user is not logged in
+  }
+
+  final eventsCollection = FirebaseFirestore.instance.collection(
+      'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+
+  return eventsCollection.snapshots().map((querySnapshot) {
+    return querySnapshot.docs.map((doc) {
+      final data = doc.data();
+      return CalendarEventData(
+        date: data['startDate'].toDate(),
+        startTime: data['startTime'].toDate(),
+        endTime: data['endTime'].toDate(),
+        title: data['title'],
+        description: data['description'],
+        endDate: data['endDate'].toDate(),
+      );
+    }).toList();
+  });
+}
+
+Future<List<List<CalendarEventData>>> fetchEventsFromFirestore() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return [[], _events]; // Return empty events if user is not logged in
+  }
+
+  // Fetch events from Firestore collection
+  final fetchedEvents = await FirebaseFirestore.instance
+      .collection('project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+      .get()
+      .then((querySnapshot) {
+    final events = querySnapshot.docs.map((doc) {
+      final data = doc.data();
+      return CalendarEventData(
+        date: data['startDate'].toDate(),
+        startTime: data['startTime'].toDate(),
+        endTime: data['endTime'].toDate(),
+        title: data['title'],
+        description: data['description'],
+        endDate: data['endDate'].toDate(),
+      );
+    }).toList();
+
+    return [events, _events]; // Return Firestore events and hardcoded events
+  }).catchError((error) {
+    return Future<List<List<CalendarEventData<Object?>>>>.value(
+        [[], _events]); // Return empty events if fetch fails
+  });
+
+  return fetchedEvents;
 }
 
 // Define your custom eventFilter function
@@ -130,7 +206,7 @@ Future<int> yourEventSorterFunction<T>(
   return 0;
 }
 
-//hardcoded events
+// Hardcoded events
 List<CalendarEventData> _events = [
   CalendarEventData(
     date: DateTime(2024, 4, 22),
@@ -138,6 +214,7 @@ List<CalendarEventData> _events = [
     description: "nextjs and tailwindcss",
     startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
+    // endDate: DateTime(2024, 4, 25),
   ),
   CalendarEventData(
     date: DateTime(2024, 4, 23),
@@ -163,27 +240,3 @@ List<CalendarEventData> _events = [
     description: "Figma and Adobe XD",
   ),
 ];
-
-Future<List<CalendarEventData>> fetchEventsFromFirestore() async {
-  if (FirebaseAuth.instance.currentUser == null) {
-    return _events;
-  }
-  final eventsCollection = FirebaseFirestore.instance.collection(
-      'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
-
-  final querySnapshot = await eventsCollection.get();
-
-  final events = querySnapshot.docs.map((doc) {
-    final data = doc.data();
-    return CalendarEventData(
-      date: data['startDate'].toDate(),
-      startTime: data['startTime'].toDate(),
-      endTime: data['endTime'].toDate(),
-      title: data['title'],
-      description: data['description'],
-      endDate: data['endDate'].toDate(),
-    );
-  }).toList();
-
-  return [..._events, ...events];
-}

@@ -1,30 +1,32 @@
+// events_provider.dart or your provider file
+
+import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
-import 'package:flutter/foundation.dart';
 
-final EventsProvider eventsProvider = EventsProvider();
-
-class EventsProvider extends ChangeNotifier {
-  final List<CalendarEventData> _events = [];
+class EventProvider extends ChangeNotifier {
+  List<CalendarEventData> _events = [];
 
   List<CalendarEventData> get events => _events;
 
   void addEvent(CalendarEventData event) {
     _events.add(event);
-    notifyListeners(); // Notify listeners of the change
+    notifyListeners();
   }
 
-  // Add methods for updating and deleting events (optional)
-  void updateEvent(int index, CalendarEventData updatedEvent) {
-    if (index >= 0 && index < _events.length) {
-      _events[index] = updatedEvent;
-      notifyListeners();
-    }
+  void updateEvent(CalendarEventData event) {
+    // Update event logic
+
+    events[events.indexWhere((e) => e.title == event.title)] = event;
+    notifyListeners();
   }
 
-  void deleteEvent(int index) {
-    if (index >= 0 && index < _events.length) {
-      _events.removeAt(index);
-      notifyListeners();
-    }
+  void deleteEvent(CalendarEventData event) {
+    // Delete event logic
+    notifyListeners();
+  }
+
+  Stream<List<CalendarEventData>> fetchEventsFromFirestore() {
+    // Replace this with your actual Firestore logic
+    return Stream.value(_events);
   }
 }
