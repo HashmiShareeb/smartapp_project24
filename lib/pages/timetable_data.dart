@@ -20,11 +20,13 @@ class TimeTableData extends StatefulWidget {
 class _TimeTableDataState extends State<TimeTableData> {
   late int _selectedIndex;
   final db = FirebaseFirestore.instance;
+  Stream<List<CalendarEventData>>? eventsStream; // Declare a stream variable
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = 0;
+    eventsStream = fetchEventsFromFirestore(); // Initialize the stream here
   }
 
   Stream<List<CalendarEventData>> fetchEventsFromFirestore() {
