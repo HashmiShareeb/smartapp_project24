@@ -4,11 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
-import 'package:smartapp_project24/pages/events/event_form.dart';
-import 'package:smartapp_project24/pages/events/events_provider.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:smartapp_project24/pages/events/event_form.dart';
 
 class TimeTableData extends StatefulWidget {
   const TimeTableData({Key? key}) : super(key: key);
@@ -20,44 +18,97 @@ class TimeTableData extends StatefulWidget {
 class _TimeTableDataState extends State<TimeTableData> {
   late int _selectedIndex;
   final db = FirebaseFirestore.instance;
-  Stream<List<CalendarEventData>>? eventsStream; // Declare a stream variable
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = 0;
-    eventsStream = fetchEventsFromFirestore(); // Initialize the stream here
+    fetchEventsFromFirestore();
   }
 
-  Stream<List<CalendarEventData>> fetchEventsFromFirestore() {
+  Future<void> fetchEventsFromFirestore() async {
+    final events = <CalendarEventData<Object?>>[];
+
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      return Stream.value([]); // Return empty list if no user is logged in
+      return;
     }
 
-    return db
-        .collection('project_sm/${user.uid}/events')
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return CalendarEventData(
-          date: (doc['date'] as Timestamp).toDate(),
-          startTime: (doc['startTime'] as Timestamp).toDate(),
-          endTime: (doc['endTime'] as Timestamp).toDate(),
-          title: doc['title'] ?? '',
-          description: doc['description'] ?? '',
-          color: Color(doc['color'] ?? Colors.lightBlue),
-          endDate: (doc['endDate'] as Timestamp).toDate(),
+    try {
+      final firestore = FirebaseFirestore.instance;
+      final eventDocs = await firestore
+          .collection(
+              'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+          .get();
+
+      for (final doc in eventDocs.docs) {
+        final eventData = doc.data();
+        events.add(
+          CalendarEventData(
+            date: (eventData['startDate'] as Timestamp).toDate(),
+            startTime: (eventData['startTime'] as Timestamp).toDate(),
+            endTime: (eventData['endTime'] as Timestamp).toDate(),
+            title: eventData['title'] as String,
+            description: eventData['description'] as String,
+            color: Color(
+              int.parse(
+                doc['color'].toRadixString(16),
+                radix: 16,
+              ),
+            ),
+            // Add additional event properties as needed
+          ),
         );
-      }).toList();
+      }
+    } catch (error) {
+      print('Error fetching events: $error');
+    }
+
+    setState(() {
+      events;
     });
   }
+  // Stream<List<CalendarEventData>> fetchEventsFromFirestore() {
+  //   final user = FirebaseAuth.instance.currentUser;
+
+  //   if (user == null) {
+  //     return Stream.value([]); // Return empty list if no user is logged in
+  //   }
+
+  //   return db.collection('project_sm/${user.uid}/events').snapshots().map(
+  //     (snapshot) {
+  //       if (snapshot.docs.isEmpty) {
+  //         setState(() {
+  //           // Handle empty snapshot here
+  //           List<QueryDocumentSnapshot> db = snapshot.docs;
+  //         });
+  //       }
+
+  //       return snapshot.docs.map(
+  //         (doc) {
+  //           return CalendarEventData(
+  //             date: (doc['startDate'] as Timestamp).toDate(),
+  //             startTime: (doc['startTime'] as Timestamp).toDate(),
+  //             endTime: (doc['endTime'] as Timestamp).toDate(),
+  //             title: doc['title'] ?? '',
+  //             description: doc['description'] ?? '',
+  //             color: Color(
+  //               int.parse(
+  //                 doc['color'].toRadixString(16),
+  //                 radix: 16,
+  //               ),
+  //             ),
+  //             endDate: (doc['endDate'] as Timestamp).toDate(),
+  //           );
+  //         },
+  //       ).toList();
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final eventProvider = Provider.of<EventProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Timetable'),
@@ -106,7 +157,6 @@ class _TimeTableDataState extends State<TimeTableData> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const EventFormPage(),
-                  fullscreenDialog: true,
                 ),
               );
 
@@ -115,12 +165,13 @@ class _TimeTableDataState extends State<TimeTableData> {
                     .collection(
                         'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
                     .add({
-                  'date': event.date,
+                  'startDate': event.date,
                   'startTime': event.startTime,
                   'endTime': event.endTime,
                   'title': event.title,
                   'description': event.description,
-                  'color': event.color.value,
+                  'color': event.color.value
+                      .toRadixString(16), // Convert color to hex
                   'endDate': event.endDate,
                 });
               }
@@ -129,15 +180,9 @@ class _TimeTableDataState extends State<TimeTableData> {
           const SizedBox(width: 8),
         ],
       ),
-      body: StreamBuilder<List<CalendarEventData>>(
-        stream: fetchEventsFromFirestore(),
+      body: FutureBuilder(
+        future: fetchEventsFromFirestore(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          final events = snapshot.data ?? [];
-
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -296,6 +341,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
+                            fullscreenDialog: true,
                             builder: (context) => EventDetailPage(event: event),
                           ),
                         );

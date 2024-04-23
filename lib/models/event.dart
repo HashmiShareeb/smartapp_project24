@@ -35,7 +35,12 @@ class Event {
       title: data['title'],
       description: data['description'],
       date: data['date'],
-      color: Color(data['color']),
+      color: Color(
+        int.parse(
+          data['color'].toRadixString(16),
+          radix: 16,
+        ),
+      ),
       endDate: data['endDate'],
 
       // location: data['location'],

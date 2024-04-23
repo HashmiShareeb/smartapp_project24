@@ -7,10 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:smartapp_project24/firebase_options.dart';
 import 'package:smartapp_project24/pages/auth/login_page.dart';
-import 'package:smartapp_project24/pages/events/events_provider.dart';
 
 DateTime get _now => DateTime.now();
 void main() async {
@@ -23,13 +21,7 @@ void main() async {
   final events = fetchedEvents[0]; // Events from Firestore
   final hardcodedEvents = fetchedEvents[1]; // Hardcoded Events
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => EventProvider(),
-      builder: (context, _) =>
-          MainApp(events: events, hardcodedEvents: hardcodedEvents),
-    ),
-  );
+  runApp(MainApp(events: events, hardcodedEvents: hardcodedEvents));
 }
 
 class MainApp extends StatelessWidget {
@@ -52,7 +44,10 @@ class MainApp extends StatelessWidget {
         if (snapshot.hasData) {
           // If data is available, combine Firestore events with hardcoded events
           final firestoreEvents = snapshot.data!;
-          final allEvents = [...firestoreEvents, ..._events]; // Combine events
+          final allEvents = [
+            ...firestoreEvents,
+            ...hardcodedEvents
+          ]; // Combine events
 
           // Return MaterialApp with CalendarControllerProvider
           return CalendarControllerProvider(

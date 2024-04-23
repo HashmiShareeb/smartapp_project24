@@ -44,7 +44,12 @@ class _CoursePageState extends State<CoursePage> {
                 endTime: (doc['endTime'] as Timestamp).toDate(),
                 title: doc['title'] ?? '',
                 description: doc['description'] ?? '',
-                color: Color(doc['color'] ?? Colors.lightBlue),
+                color: Color(
+                  int.parse(
+                    doc['color'].toRadixString(16),
+                    radix: 16,
+                  ),
+                ),
                 endDate: (doc['endDate'] as Timestamp).toDate(),
               ),
             );

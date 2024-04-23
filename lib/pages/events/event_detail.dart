@@ -166,7 +166,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios,
+            Icons.close_rounded,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -174,7 +174,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
+            icon: Icon(Icons.check_rounded),
             onPressed: () {
               if (_selectedDate != widget.event.date ||
                   _selectedEndDate != widget.event.date) {
