@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:smartapp_project24/main.dart';
+import 'package:smartapp_project24/pages/events/allevents_page.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 
 class CoursePage extends StatefulWidget {
@@ -121,14 +122,38 @@ class _CoursePageState extends State<CoursePage> {
               padding: const EdgeInsets.symmetric(
                 horizontal: 15.0,
               ),
-              child: Text(
-                'Planned Events: ${events.length}',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.lightBlue[500],
-                ),
+              child: Row(
+                children: [
+                  Text(
+                    'Planned Events: ${events.length}',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.lightBlue[500],
+                    ),
+                  ),
+                  Spacer(),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AllEventsPage(),
+                          //settings: RouteSettings(arguments: events.toList()),
+                        ),
+                      );
+                      print('View all events ' + events.length.toString());
+                    },
+                    icon: Icon(Icons.remove_red_eye),
+                    label: Text('View All'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.lightBlue[200],
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
             SizedBox(
@@ -136,7 +161,7 @@ class _CoursePageState extends State<CoursePage> {
             ),
             Expanded(
               child: ListView.separated(
-                itemCount: events.length,
+                itemCount: events.length > 4 ? 4 : events.length,
                 separatorBuilder: (context, index) => SizedBox(height: 10),
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
                 itemBuilder: (context, index) {

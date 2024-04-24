@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smartapp_project24/main.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:smartapp_project24/pages/events/event_form.dart';
@@ -22,53 +23,106 @@ class _TimeTableDataState extends State<TimeTableData> {
   @override
   void initState() {
     super.initState();
+    print('Init state called');
     _selectedIndex = 0;
     fetchEventsFromFirestore();
   }
 
   Future<void> fetchEventsFromFirestore() async {
     final events = <CalendarEventData<Object?>>[];
-
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      return;
-    }
-
-    try {
-      final firestore = FirebaseFirestore.instance;
-      final eventDocs = await firestore
-          .collection(
-              'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
-          .get();
-
-      for (final doc in eventDocs.docs) {
-        final eventData = doc.data();
-        events.add(
-          CalendarEventData(
-            date: (eventData['startDate'] as Timestamp).toDate(),
-            startTime: (eventData['startTime'] as Timestamp).toDate(),
-            endTime: (eventData['endTime'] as Timestamp).toDate(),
-            title: eventData['title'] as String,
-            description: eventData['description'] as String,
+    // final events = CalenderControllerProvider.of(context).controller.
+    db
+        .collection(
+            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+        .get()
+        .then(
+      (QuerySnapshot snapshot) {
+        snapshot.docs.forEach((doc) {
+          events.add(CalendarEventData(
+            date: (doc['startDate'] as Timestamp).toDate(),
+            startTime: (doc['startTime'] as Timestamp).toDate(),
+            endTime: (doc['endTime'] as Timestamp).toDate(),
+            title: doc['title'] as String,
+            description: doc['description'] as String,
             color: Color(
               int.parse(
                 doc['color'].toRadixString(16),
                 radix: 16,
               ),
             ),
-            // Add additional event properties as needed
-          ),
-        );
-      }
-    } catch (error) {
-      print('Error fetching events: $error');
-    }
+          ));
+          print("added ${doc['title']}");
+          // events.add(
+          //   CalendarEventData(
+          //     date: (doc['startDate'] as Timestamp).toDate(),
+          //     startTime: (doc['startTime'] as Timestamp).toDate(),
+          //     endTime: (doc['endTime'] as Timestamp).toDate(),
+          //     title: doc['title'] as String,
+          //     description: doc['description'] as String,
+          //     color: Color(
+          //       int.parse(
+          //         doc['color'].toRadixString(16),
+          //         radix: 16,
+          //       ),
+          //     ),
+          //     // Add additional c properties as needed
+          //   ),
+          // );
 
-    setState(() {
-      events;
-    });
+          setState(() {
+            events.addAll(events);
+          });
+        });
+      },
+    ).catchError(
+      (error) => print('Failed to fetch events: $error'),
+    );
   }
+
+  // Future<void> fetchEventsFromFirestore() async {
+  //   final events = <CalendarEventData<Object?>>[];
+
+  //   final user = FirebaseAuth.instance.currentUser;
+
+  //   if (user == null) {
+  //     return;
+  //   }
+
+  //   try {
+  //     final firestore = FirebaseFirestore.instance;
+  //     final eventDocs = await firestore
+  //         .collection(
+  //             'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+  //         .get();
+
+  //     for (final doc in eventDocs.docs) {
+  //       final eventData = doc.data();
+  //       events.add(
+  //         CalendarEventData(
+  //           date: (eventData['startDate'] as Timestamp).toDate(),
+  //           startTime: (eventData['startTime'] as Timestamp).toDate(),
+  //           endTime: (eventData['endTime'] as Timestamp).toDate(),
+  //           title: eventData['title'] as String,
+  //           description: eventData['description'] as String,
+  //           color: Color(
+  //             int.parse(
+  //               doc['color'].toRadixString(16),
+  //               radix: 16,
+  //             ),
+  //           ),
+  //           // Add additional c properties as needed
+  //         ),
+  //       );
+  //     }
+  //   } catch (error) {
+  //     print('Error fetching events: $error');
+  //   }
+
+  //   setState(() {
+  //     events;
+  //   });
+  // }
+
   // Stream<List<CalendarEventData>> fetchEventsFromFirestore() {
   //   final user = FirebaseAuth.instance.currentUser;
 
@@ -109,80 +163,72 @@ class _TimeTableDataState extends State<TimeTableData> {
 
   @override
   Widget build(BuildContext context) {
+    EventController c = CalendarControllerProvider.of(context).controller;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Timetable'),
         automaticallyImplyLeading: false,
         actions: [
-          DropdownButton<int>(
-            value: _selectedIndex,
-            onChanged: (int? newIndex) {
-              setState(() {
-                _selectedIndex = newIndex!;
-              });
-            },
-            dropdownColor: Colors.lightBlue[800],
-            items: [
-              DropdownMenuItem<int>(
-                value: 0,
-                child: Text(
-                  'Day',
-                  style: TextStyle(color: Colors.lightBlue[50]),
-                ),
-              ),
-              DropdownMenuItem<int>(
-                value: 1,
-                child: Text(
-                  'Week',
-                  style: TextStyle(color: Colors.lightBlue[50]),
-                ),
-              ),
-              DropdownMenuItem<int>(
-                value: 2,
-                child: Text(
-                  'Month',
-                  style: TextStyle(color: Colors.lightBlue[50]),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 12),
           IconButton(
             icon: const Icon(
               Icons.add,
               size: 25.0,
             ),
             onPressed: () async {
-              final event = await Navigator.push<CalendarEventData>(
+              final c = await Navigator.push<CalendarEventData>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const EventFormPage(),
                 ),
               );
 
-              if (event != null) {
+              if (c != null) {
                 db
                     .collection(
                         'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
                     .add({
-                  'startDate': event.date,
-                  'startTime': event.startTime,
-                  'endTime': event.endTime,
-                  'title': event.title,
-                  'description': event.description,
-                  'color': event.color.value
-                      .toRadixString(16), // Convert color to hex
-                  'endDate': event.endDate,
+                  'startDate': c.date,
+                  'startTime': c.startTime,
+                  'endTime': c.endTime,
+                  'title': c.title,
+                  'description': c.description,
+                  'color':
+                      c.color.value.toRadixString(16), // Convert color to hex
+                  'endDate': c.endDate,
                 });
               }
             },
           ),
           const SizedBox(width: 8),
+          PopupMenuButton(
+            onSelected: (int index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuEntry<int>>[
+                const PopupMenuItem(
+                  value: 0,
+                  child: Text('Day View'),
+                ),
+                const PopupMenuItem(
+                  value: 1,
+                  child: Text('Week View'),
+                ),
+                const PopupMenuItem(
+                  value: 2,
+                  child: Text('Month View'),
+                ),
+              ];
+            },
+          ),
         ],
       ),
       body: FutureBuilder(
         future: fetchEventsFromFirestore(),
         builder: (context, snapshot) {
+          print("inside builder: " + snapshot.toString());
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -193,12 +239,11 @@ class _TimeTableDataState extends State<TimeTableData> {
                     DayView(
                       dateStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('d MMMM yyyy').format(date),
-                      onEventTap: (event, date) {
+                      onEventTap: (c, date) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EventDetailPage(event: event[0]),
+                            builder: (context) => EventDetailPage(event: c[0]),
                           ),
                         );
                       },
@@ -207,26 +252,23 @@ class _TimeTableDataState extends State<TimeTableData> {
                           return Container();
                         }
 
-                        final event = events.first;
+                        final c = events.first;
 
-                        if (event != null &&
-                            event.endTime!
-                                    .difference(event.startTime!)
-                                    .inHours ==
-                                1) {
+                        if (c != null &&
+                            c.endTime!.difference(c.startTime!).inHours == 1) {
                           return Container(
                             width: double.infinity,
                             height: double.infinity,
                             padding: EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
-                              color: event.color,
+                              color: c.color,
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  event.title,
+                                  c.title,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -243,7 +285,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      EventDetailPage(event: event),
+                                      EventDetailPage(event: c),
                                 ),
                               );
                             },
@@ -252,7 +294,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                               height: double.infinity,
                               padding: EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: event.color,
+                                color: c.color,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Material(
@@ -268,7 +310,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        event.title,
+                                        c.title,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,
@@ -276,14 +318,14 @@ class _TimeTableDataState extends State<TimeTableData> {
                                         ),
                                       ),
                                       Text(
-                                        event.description ?? '',
+                                        c.description ?? '',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
-                                        '${DateFormat('HH:mm').format(event.startTime!)} - ${DateFormat('HH:mm').format(event.endTime ?? DateTime.now())}',
+                                        '${DateFormat('HH:mm').format(c.startTime!)} - ${DateFormat('HH:mm').format(c.endTime ?? DateTime.now())}',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -297,17 +339,17 @@ class _TimeTableDataState extends State<TimeTableData> {
                           );
                         }
                       },
-                      startHour: 5,
+                      startHour: 0,
                       // To Hide day header
                     ),
                     WeekView(
                       headerStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('d MMMM yyyy').format(date),
                       startDay: WeekDays.monday,
-                      onEventTap: (event, date) {
-                        print(event);
+                      onEventTap: (c, date) {
+                        print(c);
                       },
-                      startHour: 5,
+                      startHour: 0,
                     ),
                     MonthView(
                       dateStringBuilder: (date, {secondaryDate}) =>
@@ -336,16 +378,16 @@ class _TimeTableDataState extends State<TimeTableData> {
                       },
                       showBorder: true,
                       // This callback will only work if cellBuilder is null.
-                      onEventTap: (event, date) {
+                      onEventTap: (c, date) {
                         // Implement callback when user taps on a cell.
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             fullscreenDialog: true,
-                            builder: (context) => EventDetailPage(event: event),
+                            builder: (context) => EventDetailPage(event: c),
                           ),
                         );
-                        print(event);
+                        print(c);
                       },
 
                       startDay: WeekDays.monday,

@@ -36,12 +36,14 @@ class _LoginPageState extends State<LoginPage> {
           password: _passwordController.text,
         );
         if (credentials.user != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainPage(),
-            ),
-          );
+          if (mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MainPage(),
+              ),
+            );
+          }
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
