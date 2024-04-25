@@ -196,6 +196,30 @@ class _EventFormPageState extends State<EventFormPage> {
               ),
               const SizedBox(height: 16),
               ListTile(
+                leading: Icon(Icons.event_available_sharp),
+                title: Text('All Day'),
+                trailing: Switch(
+                  value: _selectedStartTime.hour >= 24,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value) {
+                        _selectedEndTime = TimeOfDay(
+                          hour: _selectedEndTime.hour + 24,
+                          minute: _selectedEndTime.minute,
+                        );
+                      } else {
+                        _selectedEndTime = TimeOfDay(
+                          hour: _selectedEndTime.hour % 24,
+                          minute: _selectedEndTime.minute,
+                        );
+                      }
+                    });
+                  },
+                  activeColor: Colors.lightBlue,
+                  activeTrackColor: Colors.lightBlue[100],
+                ),
+              ),
+              ListTile(
                 leading: Icon(Icons.calendar_today_rounded),
                 title: Text('Start Date'),
                 trailing: Text(

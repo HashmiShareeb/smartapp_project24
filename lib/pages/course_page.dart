@@ -116,6 +116,50 @@ class _CoursePageState extends State<CoursePage> {
             SizedBox(
               height: 20,
             ),
+            //? Classes grid view
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                'Classes',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.lightBlue[800],
+                ),
+              ),
+            ),
+            Container(
+              height: 180,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                children: [
+                  lessonsCard(
+                    'Frontend',
+                    'Web Development',
+                    Colors.lightBlue,
+                  ),
+                  lessonsCard(
+                    'Smartapp',
+                    'flutter project',
+                    Colors.blue,
+                  ),
+                  lessonsCard(
+                    'Backend',
+                    'C# .NET',
+                    Colors.deepPurple,
+                  ),
+                  lessonsCard(
+                    'UI/UX',
+                    'Interface Design',
+                    Colors.deepOrange,
+                  ),
+                ],
+              ),
+            ),
+            //? Events list view
+
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 15.0,
@@ -123,7 +167,7 @@ class _CoursePageState extends State<CoursePage> {
               child: Row(
                 children: [
                   Text(
-                    'Planned Events: ${events.length}',
+                    'Planned Events',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 18,
@@ -132,7 +176,7 @@ class _CoursePageState extends State<CoursePage> {
                     ),
                   ),
                   Spacer(),
-                  ElevatedButton.icon(
+                  TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -143,19 +187,27 @@ class _CoursePageState extends State<CoursePage> {
                       );
                       print('View all events ' + events.length.toString());
                     },
-                    icon: Icon(Icons.remove_red_eye),
-                    label: Text('View All'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.lightBlue[200],
+
+                    child: Text(
+                      'View all',
+                      style: TextStyle(
+                        color: Colors.lightBlue[800],
+                        fontSize: 16,
                       ),
                     ),
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(
+                        Colors.lightBlue[800],
+                      ),
+                    ),
+                    // style: ButtonStyle(
+                    //   backgroundColor: MaterialStateProperty.all(
+                    //     Colors.lightBlue[200],
+                    //   ),
+                    // ),
                   )
                 ],
               ),
-            ),
-            SizedBox(
-              height: 20,
             ),
             Expanded(
               child: ListView.separated(
@@ -221,61 +273,65 @@ class _CoursePageState extends State<CoursePage> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Text(
-                'Classes',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.lightBlue[800],
-                ),
-              ),
-            ),
-            Container(
-              height: 180,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                children: [
-                  lessonsCard('Frontend', Colors.lightBlue),
-                  lessonsCard('Smartapp', Colors.lightBlue),
-                  lessonsCard('Backend', Colors.lightBlue),
-                  lessonsCard('UI/UX', Colors.lightBlue),
-                ],
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget lessonsCard(String className, Color color) {
-    return GestureDetector(
-      onTap: () {
-        // Add navigation logic here
-        print('Navigating to $className');
-      },
-      child: Container(
-        width: 260,
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.6),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Text(
-            className,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color:
-                  color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+  //!lessonsCard widget
+  Widget lessonsCard(String className, String description, Color color) {
+    return Container(
+      width: 260,
+      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              className,
+              style: TextStyle(
+                color: color.computeLuminance() > 0.5
+                    ? Colors.black
+                    : Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-          ),
+            SizedBox(height: 8),
+            Text(
+              description,
+              style: TextStyle(
+                color: color.computeLuminance() > 0.5
+                    ? Colors.black54
+                    : Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                // Add navigation logic here
+                print('Navigating to $className');
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(color),
+              ),
+              child: Text(
+                'View Details',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

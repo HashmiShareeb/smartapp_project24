@@ -315,6 +315,29 @@ class _EventDetailPageState extends State<EventDetailPage> {
               ),
               const SizedBox(height: 16),
               ListTile(
+                title: const Text('All Day'),
+                trailing: Switch(
+                  value: _selectedEndDate != _selectedDate,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value) {
+                        _selectedEndTime = TimeOfDay(
+                          hour: _selectedEndTime.hour + 24,
+                          minute: _selectedEndTime.minute,
+                        );
+                      } else {
+                        _selectedEndTime = TimeOfDay(
+                          hour: _selectedEndTime.hour % 24,
+                          minute: _selectedEndTime.minute,
+                        );
+                      }
+                    });
+                  },
+                  activeColor: Colors.lightBlue,
+                  activeTrackColor: Colors.lightBlue[100],
+                ),
+              ),
+              ListTile(
                 title: Text('Start Date'),
                 trailing: Text(
                   DateFormat("dd/MM/yyyy").format(_selectedDate),

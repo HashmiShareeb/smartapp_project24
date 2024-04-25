@@ -169,4 +169,20 @@ List<CalendarEventData> _events = [
     description: "Consult Flutter Project",
     color: Colors.lightBlue,
   ),
+  CalendarEventData(
+    date: DateTime(2024, 4, 25),
+    startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
+    title: "Backend Development",
+    description: ".NET and dapr",
+    color: Colors.lightBlue,
+  ),
+  CalendarEventData(
+    date: DateTime(2024, 4, 26),
+    startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
+    title: "User Experience Design",
+    description: "Slide Deck Presentation",
+    color: Colors.lightBlue,
+  ),
 ];
