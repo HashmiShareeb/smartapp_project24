@@ -69,50 +69,48 @@ class _CoursePageState extends State<CoursePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-              child: Container(
-                width: double.infinity,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      textAlign: TextAlign.start,
-                      text: TextSpan(
-                        text: DateFormat('EEEE').format(
-                          DateTime.now(),
-                        ),
-                        style: TextStyle(
-                          color: Colors.lightBlue[500],
-                          fontSize: 16,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: '\n${DateFormat('d MMMM').format(
-                              DateTime.now(),
-                            )}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.lightBlue[500],
-                            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              color: Colors.lightBlue[100],
+              width: double.infinity,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    textAlign: TextAlign.start,
+                    text: TextSpan(
+                      text: DateFormat('EEEE').format(
+                        DateTime.now(),
+                      ),
+                      style: TextStyle(
+                        color: Colors.lightBlue[800],
+                        fontSize: 16,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '\n${DateFormat('d MMMM').format(
+                            DateTime.now(),
+                          )}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.lightBlue[800],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: () {
-                        displayEvents();
-                      },
-                      icon: Icon(
-                        Icons.refresh_rounded,
-                        color: Colors.lightBlue[500],
-                      ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      displayEvents();
+                    },
+                    icon: Icon(
+                      Icons.refresh_rounded,
+                      color: Colors.lightBlue[800],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
@@ -130,7 +128,7 @@ class _CoursePageState extends State<CoursePage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Colors.lightBlue[500],
+                      color: Colors.lightBlue[800],
                     ),
                   ),
                   Spacer(),
@@ -173,7 +171,7 @@ class _CoursePageState extends State<CoursePage> {
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: event.color.computeLuminance() > 0.5
-                            ? Colors.black12
+                            ? Colors.black54
                             : Colors.white,
                       ),
                     ),
@@ -181,7 +179,9 @@ class _CoursePageState extends State<CoursePage> {
                       '${DateFormat('hh:mm a').format(event.startTime!)} - ${DateFormat('hh:mm a').format(event.endTime!)}',
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color: Colors.white70,
+                        color: event.color.computeLuminance() > 0.5
+                            ? Colors.black54
+                            : Colors.white70,
                       ),
                     ),
                     leading: CircleAvatar(
@@ -189,8 +189,8 @@ class _CoursePageState extends State<CoursePage> {
                       child: Text(
                         event.title[0].toUpperCase(),
                         style: TextStyle(
-                          color: event.color.computeLuminance() > 0.8
-                              ? Colors.black
+                          color: event.color.computeLuminance() > 0.5
+                              ? Colors.black45
                               : Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -199,7 +199,7 @@ class _CoursePageState extends State<CoursePage> {
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: event.color.computeLuminance() > 0.5
-                          ? Colors.black
+                          ? Colors.black54
                           : Colors.white,
                       size: 20,
                     ),
@@ -229,7 +229,7 @@ class _CoursePageState extends State<CoursePage> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: Colors.lightBlue[500],
+                  color: Colors.lightBlue[800],
                 ),
               ),
             ),

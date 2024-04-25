@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                     size: 30.0,
                   ),
                 ),
-
+                SizedBox(width: 12.0),
                 // Add filter dropdown here
               ],
             )
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
           // NavigationDestination(
           //   icon: Icon(Icons.menu_book_outlined),
           //   selectedIcon: Icon(Icons.menu_book),
-          //   label: 'Courses',
+          //   label: 'Events',
           // ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),

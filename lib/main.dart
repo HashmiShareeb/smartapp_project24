@@ -52,10 +52,11 @@ class MainApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: Colors.grey[100],
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.lightBlue[800],
+            backgroundColor: Colors.lightBlue[900],
             titleTextStyle: TextStyle(
               color: Colors.lightBlue[50],
               fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
             iconTheme: IconThemeData(
               color: Colors.lightBlue[50],
@@ -96,7 +97,44 @@ class MainApp extends StatelessWidget {
 }
 
 //list of events from firestore
-List<CalendarEventData> fetchedEvents = [];
+List<CalendarEventData> fetchedEvents = [
+  CalendarEventData(
+    date: DateTime(2024, 4, 22),
+    title: "Frontend Development",
+    description: "Consult Portfolio",
+    startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
+    color: Color.fromARGB(255, 15, 174, 23),
+  ),
+];
+
+void fetchEventsFromFirestore() async {
+  // Fetch events from Firestore
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+      .get();
+
+  // Convert Firestore documents to CalendarEventData objects
+  List<CalendarEventData> events = querySnapshot.docs.map((doc) {
+    DateTime date = (doc['date'] as Timestamp).toDate();
+    DateTime startTime = (doc['startTime'] as Timestamp).toDate();
+    DateTime endTime = (doc['endTime'] as Timestamp).toDate();
+    String title = doc['title'];
+    String description = doc['description'];
+    Color color = Color(doc['color']);
+
+    return CalendarEventData(
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      title: title,
+      description: description,
+      color: color,
+    );
+  }).toList();
+
+  fetchedEvents = events;
+}
 
 List<CalendarEventData> _events = [
   CalendarEventData(

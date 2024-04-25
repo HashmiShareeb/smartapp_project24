@@ -29,7 +29,6 @@ class _TimeTableDataState extends State<TimeTableData> {
   }
 
   Future<void> fetchEventsFromFirestore() async {
-    final events = <CalendarEventData<Object?>>[];
     // final events = CalenderControllerProvider.of(context).controller.
     db
         .collection(
@@ -38,19 +37,25 @@ class _TimeTableDataState extends State<TimeTableData> {
         .then(
       (QuerySnapshot snapshot) {
         snapshot.docs.forEach((doc) {
-          events.add(CalendarEventData(
-            date: (doc['startDate'] as Timestamp).toDate(),
-            startTime: (doc['startTime'] as Timestamp).toDate(),
-            endTime: (doc['endTime'] as Timestamp).toDate(),
-            title: doc['title'] as String,
-            description: doc['description'] as String,
-            color: Color(
-              int.parse(
-                doc['color'].toRadixString(16),
-                radix: 16,
-              ),
-            ),
-          ));
+          List<CalendarEventData> events = snapshot.docs.map((doc) {
+            DateTime date = (doc['startDate'] as Timestamp).toDate();
+            DateTime startTime = (doc['startTime'] as Timestamp).toDate();
+            DateTime endTime = (doc['endTime'] as Timestamp).toDate();
+            String title = doc['title'];
+            String description = doc['description'];
+            Color color = Color(doc['color']);
+            DateTime endDate = (doc['endDate'] as Timestamp).toDate();
+
+            return CalendarEventData(
+              date: date,
+              startTime: startTime,
+              endTime: endTime,
+              title: title,
+              description: description,
+              color: color,
+              endDate: endDate,
+            );
+          }).toList();
           print("added ${doc['title']}");
           // events.add(
           //   CalendarEventData(
@@ -164,6 +169,7 @@ class _TimeTableDataState extends State<TimeTableData> {
   @override
   Widget build(BuildContext context) {
     EventController c = CalendarControllerProvider.of(context).controller;
+    c.addAll(fetchedEvents);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Timetable'),
@@ -237,6 +243,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                   index: _selectedIndex,
                   children: [
                     DayView(
+                      controller: c,
                       dateStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('d MMMM yyyy').format(date),
                       onEventTap: (c, date) {
@@ -343,6 +350,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                       // To Hide day header
                     ),
                     WeekView(
+                      controller: c,
                       headerStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('d MMMM yyyy').format(date),
                       startDay: WeekDays.monday,
@@ -352,6 +360,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                       startHour: 0,
                     ),
                     MonthView(
+                      controller: c,
                       dateStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('MMMM yyyy').format(date),
                       minMonth: DateTime(1990),
