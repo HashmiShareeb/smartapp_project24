@@ -215,69 +215,95 @@ class _CoursePageState extends State<CoursePage> {
               ),
             ),
             Expanded(
-              child: ListView.separated(
-                itemCount: events.length > 4 ? 4 : events.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                itemBuilder: (context, index) {
-                  final event = events[index];
-                  return ListTile(
-                    title: Text(
-                      event.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: event.color.computeLuminance() > 0.5
-                            ? Colors.black54
-                            : Colors.white,
+              child: events.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.event_busy_rounded,
+                            size: 60,
+                            color: Colors.lightBlue[800],
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'No events yet',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.lightBlue[800],
+                            ),
+                          ),
+                        ],
                       ),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: events.length > 3 ? 3 : events.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      itemBuilder: (context, index) {
+                        final event = events[index];
+                        return ListTile(
+                          title: Text(
+                            event.title ?? 'My Event',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: event.color.computeLuminance() > 0.5
+                                  ? Colors.black54
+                                  : Colors.white,
+                            ),
+                          ),
+                          subtitle: Text(
+                            '${DateFormat('hh:mm a').format(event.startTime!)} - ${DateFormat('hh:mm a').format(event.endTime!)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: event.color.computeLuminance() > 0.5
+                                  ? Colors.black54
+                                  : Colors.white70,
+                            ),
+                          ),
+                          leading: CircleAvatar(
+                            backgroundColor: event.color,
+                            child: Text(
+                              event.title.isNotEmpty
+                                  ? event.title[0].toUpperCase()
+                                  : 'E',
+                              style: TextStyle(
+                                color: event.color.computeLuminance() > 0.5
+                                    ? Colors.black45
+                                    : Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: event.color.computeLuminance() > 0.5
+                                ? Colors.black54
+                                : Colors.white,
+                            size: 20,
+                          ),
+                          tileColor: event.color.withOpacity(0.6),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8.0),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventDetailPage(event: event),
+                              ),
+                            );
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        );
+                      },
                     ),
-                    subtitle: Text(
-                      '${DateFormat('hh:mm a').format(event.startTime!)} - ${DateFormat('hh:mm a').format(event.endTime!)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        color: event.color.computeLuminance() > 0.5
-                            ? Colors.black54
-                            : Colors.white70,
-                      ),
-                    ),
-                    leading: CircleAvatar(
-                      backgroundColor: event.color,
-                      child: Text(
-                        event.title[0].toUpperCase(),
-                        style: TextStyle(
-                          color: event.color.computeLuminance() > 0.5
-                              ? Colors.black45
-                              : Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: event.color.computeLuminance() > 0.5
-                          ? Colors.black54
-                          : Colors.white,
-                      size: 20,
-                    ),
-                    tileColor: event.color.withOpacity(0.6),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EventDetailPage(event: event),
-                        ),
-                      );
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  );
-                },
-              ),
             ),
           ],
         ),

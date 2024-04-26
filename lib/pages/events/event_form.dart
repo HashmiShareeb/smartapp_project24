@@ -1,13 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:smartapp_project24/models/event.dart';
 
 class EventFormPage extends StatefulWidget {
   const EventFormPage({Key? key}) : super(key: key);
@@ -147,13 +145,13 @@ class _EventFormPageState extends State<EventFormPage> {
     );
   }
 
-  //toggle all day event
-  // Switch onChanged callback
+  //?toggle all day event
+  //!Switch onChanged callback
   void _toggleAllDay(bool value) {
     setState(() {
       _isAllDay = value;
 
-      // Update start and end times accordingly
+      //!Update start and end times accordingly
       if (_isAllDay) {
         _selectedStartTime = TimeOfDay(hour: 0, minute: 0);
         _selectedEndTime = TimeOfDay(hour: 23, minute: 59);
@@ -179,7 +177,8 @@ class _EventFormPageState extends State<EventFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
+              //? title textfield
+              TextFormField(
                 autocorrect: true,
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -195,9 +194,15 @@ class _EventFormPageState extends State<EventFormPage> {
                   fillColor: Colors.white,
                   filled: true,
                 ),
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    _titleController.text = 'My Event';
+                  }
+                },
               ),
               const SizedBox(height: 16),
-              TextField(
+              //? Description textfield
+              TextFormField(
                 autocorrect: true,
                 controller: _descriptionController,
                 decoration: InputDecoration(
@@ -214,6 +219,9 @@ class _EventFormPageState extends State<EventFormPage> {
                   filled: true,
                 ),
                 maxLines: null,
+                validator: (value) {
+                  return null; // Remove the validation for description
+                },
               ),
 
               //? toggle all day event

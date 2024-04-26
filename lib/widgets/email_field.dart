@@ -10,7 +10,7 @@ class EmailField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,

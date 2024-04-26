@@ -287,7 +287,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
+              TextFormField(
                 autocorrect: true,
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -303,9 +303,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
                   fillColor: Colors.white,
                   filled: true,
                 ),
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    _titleController.text = 'My Event';
+                  }
+                },
               ),
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
                 autocorrect: true,
                 controller: _descriptionController,
                 decoration: InputDecoration(
@@ -322,6 +327,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
                   filled: true,
                 ),
                 maxLines: null,
+                validator: (value) {
+                  return null; // Remove the validation for description
+                },
               ),
               const SizedBox(height: 16),
               ListTile(

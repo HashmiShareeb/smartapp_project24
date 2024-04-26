@@ -165,65 +165,90 @@ class _AllEventsPageState extends State<AllEventsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: ListView.builder(
-              controller: _eventController,
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: events[index]
-                      .map(
-                        (event) => ListTile(
-                          title: Text(
-                            event.title,
-                            style: TextStyle(
-                              color: event.color.computeLuminance() > 0.5
-                                  ? Colors.black54
-                                  : Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          subtitle: Text(
-                            event.description!,
-                            style: TextStyle(
-                              color: event.color.computeLuminance() > 0.5
-                                  ? Colors.black54
-                                  : Colors.white70,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          leading: CircleAvatar(
-                            backgroundColor: event.color,
-                            child: Text(
-                              event.title[0].toUpperCase(),
-                              style: TextStyle(
-                                color: event.color.computeLuminance() > 0.5
-                                    ? Colors.black54
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.more_vert_rounded,
-                              color: event.color.computeLuminance() > 0.5
-                                  ? Colors.black54
-                                  : Colors.white,
-                            ),
-                            onPressed: () => _showEventOptions(event),
-                          ),
-                          tileColor: event.color.withOpacity(0.8),
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
+            child: events.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.event_busy,
+                          size: 48.0,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'No events yet!',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
                           ),
                         ),
-                      )
-                      .toList(),
-                );
-              },
-            ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _eventController,
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: events[index]
+                            .map(
+                              (event) => ListTile(
+                                title: Text(
+                                  event.title ?? 'My Event',
+                                  style: TextStyle(
+                                    color: event.color.computeLuminance() > 0.5
+                                        ? Colors.black54
+                                        : Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  event.description!,
+                                  style: TextStyle(
+                                    color: event.color.computeLuminance() > 0.5
+                                        ? Colors.black54
+                                        : Colors.white70,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                leading: CircleAvatar(
+                                  backgroundColor: event.color,
+                                  child: Text(
+                                    event.title.isNotEmpty
+                                        ? event.title[0].toUpperCase()
+                                        : 'E',
+                                    style: TextStyle(
+                                      color:
+                                          event.color.computeLuminance() > 0.5
+                                              ? Colors.black54
+                                              : Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.more_vert_rounded,
+                                    color: event.color.computeLuminance() > 0.5
+                                        ? Colors.black54
+                                        : Colors.white,
+                                  ),
+                                  onPressed: () => _showEventOptions(event),
+                                ),
+                                tileColor: event.color.withOpacity(0.8),
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 8.0,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
