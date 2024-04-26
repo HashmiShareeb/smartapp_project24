@@ -165,16 +165,26 @@ class _EventDetailPageState extends State<EventDetailPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.close_rounded,
+            color: _appBarColor.computeLuminance() > 0.5
+                ? Colors.black54
+                : Colors.white,
           ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
+          //icon closed
+
           IconButton(
-            icon: Icon(Icons.check_rounded),
+            icon: Icon(
+              Icons.check_rounded,
+              color: _appBarColor.computeLuminance() > 0.5
+                  ? Colors.black54
+                  : Colors.white,
+            ),
             onPressed: () {
               if (_selectedDate != widget.event.date ||
                   _selectedEndDate != widget.event.date) {
@@ -259,16 +269,16 @@ class _EventDetailPageState extends State<EventDetailPage> {
           SizedBox(width: 10),
         ],
         title: Text(
-          widget.event.title,
+          "Edit: " + widget.event.title,
           style: TextStyle(
-            color: _appBarColor.computeLuminance() > 0.8
-                ? Colors.black.withOpacity(0.8)
+            color: _appBarColor.computeLuminance() > 0.5
+                ? Colors.black54
                 : Colors.white,
           ),
         ),
         backgroundColor: _appBarColor,
-        foregroundColor: _appBarColor.computeLuminance() > 0.8
-            ? Colors.black.withOpacity(0.8)
+        foregroundColor: _appBarColor.computeLuminance() > 0.5
+            ? Colors.black54
             : Colors.white,
       ),
       body: SingleChildScrollView(
@@ -333,8 +343,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
                       }
                     });
                   },
-                  activeColor: Colors.lightBlue,
-                  activeTrackColor: Colors.lightBlue[100],
+                  activeColor: _appBarColor,
+                  activeTrackColor: _appBarColor.withOpacity(0.5),
                 ),
               ),
               ListTile(
@@ -402,18 +412,32 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          CalendarControllerProvider.of(context)
-              .controller
-              .remove(widget.event);
-          Navigator.of(context).pop();
-          deleteEventsByTitle(widget.event.title);
-        },
-        child: Icon(Icons.delete),
-        shape: const CircleBorder(),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        //delete button
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                CalendarControllerProvider.of(context)
+                    .controller
+                    .remove(widget.event);
+                Navigator.of(context).pop();
+                deleteEventsByTitle(widget.event.title);
+              },
+              child: const Icon(Icons.delete),
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.orange[500],
+                onPrimary: Colors.black,
+              ),
+            ),
+          ],
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
     );
   }
 }

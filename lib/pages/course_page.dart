@@ -1,14 +1,15 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
-import 'package:smartapp_project24/main.dart';
 import 'package:smartapp_project24/pages/events/allevents_page.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 
 class CoursePage extends StatefulWidget {
-  const CoursePage({Key? key}) : super(key: key);
+  const CoursePage({super.key});
 
   @override
   State<CoursePage> createState() => _CoursePageState();
@@ -37,7 +38,7 @@ class _CoursePageState extends State<CoursePage> {
           events.clear();
 
           // Iterate over documents and add events to the list
-          querySnapshot.docs.forEach((doc) {
+          for (var doc in querySnapshot.docs) {
             events.add(
               CalendarEventData(
                 date: (doc['startDate'] as Timestamp).toDate(),
@@ -54,11 +55,13 @@ class _CoursePageState extends State<CoursePage> {
                 endDate: (doc['endDate'] as Timestamp).toDate(),
               ),
             );
-          });
+          }
         });
       },
     ).catchError(
-      (error) => print('Failed to fetch events: $error'),
+      (error) async {
+        print('Failed to fetch events: $error');
+      },
     );
   }
 
@@ -70,7 +73,8 @@ class _CoursePageState extends State<CoursePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               color: Colors.lightBlue[100],
               width: double.infinity,
               child: Row(
@@ -113,7 +117,7 @@ class _CoursePageState extends State<CoursePage> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             //? Classes grid view
@@ -133,7 +137,8 @@ class _CoursePageState extends State<CoursePage> {
               height: 180,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0, vertical: 10.0),
                 children: [
                   lessonsCard(
                     'Frontend',
@@ -175,7 +180,7 @@ class _CoursePageState extends State<CoursePage> {
                       color: Colors.lightBlue[800],
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -187,17 +192,17 @@ class _CoursePageState extends State<CoursePage> {
                       );
                       print('View all events ' + events.length.toString());
                     },
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(
+                        Colors.lightBlue[800],
+                      ),
+                    ),
 
                     child: Text(
                       'View all',
                       style: TextStyle(
                         color: Colors.lightBlue[800],
                         fontSize: 16,
-                      ),
-                    ),
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(
-                        Colors.lightBlue[800],
                       ),
                     ),
                     // style: ButtonStyle(
@@ -212,8 +217,9 @@ class _CoursePageState extends State<CoursePage> {
             Expanded(
               child: ListView.separated(
                 itemCount: events.length > 4 ? 4 : events.length,
-                separatorBuilder: (context, index) => SizedBox(height: 10),
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 itemBuilder: (context, index) {
                   final event = events[index];
                   return ListTile(
@@ -256,8 +262,8 @@ class _CoursePageState extends State<CoursePage> {
                       size: 20,
                     ),
                     tileColor: event.color.withOpacity(0.6),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -283,7 +289,7 @@ class _CoursePageState extends State<CoursePage> {
   Widget lessonsCard(String className, String description, Color color) {
     return Container(
       width: 260,
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
         color: color.withOpacity(0.6),
         borderRadius: BorderRadius.circular(12),
@@ -304,7 +310,7 @@ class _CoursePageState extends State<CoursePage> {
                 fontSize: 20,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               description,
               style: TextStyle(
@@ -314,7 +320,7 @@ class _CoursePageState extends State<CoursePage> {
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
                 // Add navigation logic here
@@ -323,7 +329,7 @@ class _CoursePageState extends State<CoursePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(color),
               ),
-              child: Text(
+              child: const Text(
                 'View Details',
                 style: TextStyle(
                   color: Colors.white,

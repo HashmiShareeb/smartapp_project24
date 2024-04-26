@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +26,8 @@ class _EventFormPageState extends State<EventFormPage> {
     hour: TimeOfDay.now().hour + 1,
     minute: TimeOfDay.now().minute,
   );
+
+  bool _isAllDay = false; // Added variable to track all-day status
 
   final db = FirebaseFirestore.instance;
   void addEvent() async {
@@ -146,6 +147,26 @@ class _EventFormPageState extends State<EventFormPage> {
     );
   }
 
+  //toggle all day event
+  // Switch onChanged callback
+  void _toggleAllDay(bool value) {
+    setState(() {
+      _isAllDay = value;
+
+      // Update start and end times accordingly
+      if (_isAllDay) {
+        _selectedStartTime = TimeOfDay(hour: 0, minute: 0);
+        _selectedEndTime = TimeOfDay(hour: 23, minute: 59);
+      } else {
+        _selectedStartTime = TimeOfDay.now();
+        _selectedEndTime = TimeOfDay(
+          hour: TimeOfDay.now().hour + 1,
+          minute: TimeOfDay.now().minute,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,29 +215,17 @@ class _EventFormPageState extends State<EventFormPage> {
                 ),
                 maxLines: null,
               ),
+
+              //? toggle all day event
               const SizedBox(height: 16),
               ListTile(
                 leading: Icon(Icons.event_available_sharp),
                 title: Text('All Day'),
                 trailing: Switch(
-                  value: _selectedStartTime.hour >= 24,
-                  onChanged: (value) {
-                    setState(() {
-                      if (value) {
-                        _selectedEndTime = TimeOfDay(
-                          hour: _selectedEndTime.hour + 24,
-                          minute: _selectedEndTime.minute,
-                        );
-                      } else {
-                        _selectedEndTime = TimeOfDay(
-                          hour: _selectedEndTime.hour % 24,
-                          minute: _selectedEndTime.minute,
-                        );
-                      }
-                    });
-                  },
-                  activeColor: Colors.lightBlue,
-                  activeTrackColor: Colors.lightBlue[100],
+                  value: _isAllDay,
+                  onChanged: (value) => _toggleAllDay(value),
+                  activeColor: _selectedColor,
+                  activeTrackColor: _selectedColor.withOpacity(0.5),
                 ),
               ),
               ListTile(
@@ -264,39 +273,55 @@ class _EventFormPageState extends State<EventFormPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your code here
-          CalendarControllerProvider.of(context)
-              .controller
-              .add(CalendarEventData(
-                date: _selectedStartDate,
-                endDate: _selectedEndDate,
-                event: _titleController.text,
-                title: _titleController.text,
-                description: _descriptionController.text,
-                startTime: DateTime(
-                  _selectedStartDate.year,
-                  _selectedStartDate.month,
-                  _selectedStartDate.day,
-                  _selectedStartTime.hour,
-                  _selectedStartTime.minute,
-                ),
-                endTime: DateTime(
-                  _selectedEndDate.year,
-                  _selectedEndDate.month,
-                  _selectedEndDate.day,
-                  _selectedEndTime.hour,
-                  _selectedEndTime.minute,
-                ),
-                color: Color(int.parse(_selectedColor.value.toRadixString(16),
-                    radix: 16)),
-              ));
-          Navigator.pop(context);
-          addEvent();
-        },
-        child: const Icon(Icons.add),
-        shape: const CircleBorder(),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.transparent,
+        elevation: 0,
+        //delete button
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                // Add your code here
+                CalendarControllerProvider.of(context)
+                    .controller
+                    .add(CalendarEventData(
+                      date: _selectedStartDate,
+                      endDate: _selectedEndDate,
+                      event: _titleController.text,
+                      title: _titleController.text,
+                      description: _descriptionController.text,
+                      startTime: DateTime(
+                        _selectedStartDate.year,
+                        _selectedStartDate.month,
+                        _selectedStartDate.day,
+                        _selectedStartTime.hour,
+                        _selectedStartTime.minute,
+                      ),
+                      endTime: DateTime(
+                        _selectedEndDate.year,
+                        _selectedEndDate.month,
+                        _selectedEndDate.day,
+                        _selectedEndTime.hour,
+                        _selectedEndTime.minute,
+                      ),
+                      color: Color(int.parse(
+                          _selectedColor.value.toRadixString(16),
+                          radix: 16)),
+                    ));
+                Navigator.pop(context);
+                addEvent();
+              },
+              child: const Icon(Icons.add),
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.orange[600],
+                onPrimary: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
