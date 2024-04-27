@@ -82,23 +82,6 @@ class _ProfilePageState extends State<ProfilePage> {
               thickness: 1,
             ),
             ListTile(
-              title: const Text('Notifications'),
-              trailing: CircleAvatar(
-                backgroundColor: Colors.orange[300],
-                child: Icon(
-                  Icons.notifications_active_rounded,
-                  color: Colors.white,
-                ),
-              ),
-              onTap: () {
-                //display notifications
-              },
-            ),
-            Divider(
-              color: Colors.grey[300],
-              thickness: 1,
-            ),
-            ListTile(
               title: const Text('Logout'),
               trailing: CircleAvatar(
                 backgroundColor: Colors.orange[300],

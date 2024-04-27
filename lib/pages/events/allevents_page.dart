@@ -3,10 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
-
-import '../service/notifications_service.dart';
 
 class AllEventsPage extends StatefulWidget {
   const AllEventsPage({super.key});
@@ -253,31 +250,6 @@ class _AllEventsPageState extends State<AllEventsPage> {
                     },
                   ),
           ),
-          ElevatedButton.icon(
-            onPressed: () {
-              // Show notification when button is pressed
-              NotificationService.showNotification(
-                id: 0,
-                title: 'Event Reminder',
-                body: 'You have an event coming up!',
-              );
-            },
-            icon: const Icon(Icons.notifications),
-            label: const Text('Show Notification'),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              // Show notification when button is pressed
-              NotificationService.showEventNotification(
-                id: 1,
-                title: 'Event Reminder',
-                body: 'You have an event coming up!',
-                event: _selectedEvent!,
-              );
-            },
-            icon: const Icon(Icons.timer),
-            label: const Text('Show Notification'),
-          )
         ],
       ),
     );

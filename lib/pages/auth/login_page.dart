@@ -1,11 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/pages/auth/auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smartapp_project24/pages/auth/forgot_password.dart';
 import 'package:smartapp_project24/pages/auth/register_page.dart';
-import 'package:smartapp_project24/pages/home_page.dart';
-
-import '../../widgets/email_field.dart';
-import '../../widgets/password_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,11 +17,21 @@ class _LoginPageState extends State<LoginPage> {
   //text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void formValidator() {
+    if (_formKey.currentState!.validate()) {
+      print('Form is valid');
+    } else {
+      print('Form is invalid');
+    }
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -52,6 +61,8 @@ class _LoginPageState extends State<LoginPage> {
           print('Wrong password provided for that user.');
         }
       }
+
+      formValidator();
     }
   }
 
@@ -59,35 +70,101 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          child: Form(
+            key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 100),
                 const Icon(
                   Icons.account_circle,
-                  size: 50,
+                  size: 55,
                 ),
-                const SizedBox(height: 10),
                 const Text(
                   'Login Page',
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 75),
-
                 //!Email input
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: EmailField(emailController: _emailController),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'Enter your email',
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.lightBlue),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      // Set error style based on validation result
+                      errorStyle: (_formKey.currentState?.validate() == true)
+                          ? null
+                          : const TextStyle(color: Colors.red),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Email cannot be empty';
+                      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                              caseSensitive: false)
+                          .hasMatch(value)) {
+                        return 'Please enter a valid email address';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 const SizedBox(height: 10),
-
                 //!Password input
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: PasswordField(passwordController: _passwordController),
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.lightBlue),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+
+                      fillColor: Colors.white,
+                      filled: true,
+
+                      // Set error style based on validation result
+                      errorStyle: (_formKey.currentState?.validate() == true)
+                          ? null
+                          : const TextStyle(color: Colors.red),
+                    ),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Password cannot be empty';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
+                //display validation error message
+
                 const SizedBox(height: 20),
                 //? Login button
                 Padding(
@@ -133,18 +210,19 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                //text button for guests (temporary)
+                //forgot password
                 TextButton(
                   onPressed: () {
+                    //forgot password
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => const ForgotPasswordPage(),
                       ),
                     );
                   },
                   child: const Text(
-                    'Continue as guest',
+                    'Forgot password?',
                     style: TextStyle(
                       color: Colors.lightBlue,
                       fontWeight: FontWeight.bold,

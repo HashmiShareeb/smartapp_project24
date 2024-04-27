@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:smartapp_project24/firebase_options.dart';
 import 'package:smartapp_project24/pages/auth/login_page.dart';
 
-import 'pages/service/notifications_service.dart';
-
 DateTime get _now => DateTime.now();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +18,6 @@ void main() async {
   );
 
   fetchEventsFromFirestore();
-
-  final notificationService = NotificationService();
-  await NotificationService.init();
 
   runApp(MainApp(_events));
 }
