@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class EventDetailPage extends StatefulWidget {
   final CalendarEventData event;
 
-  const EventDetailPage({Key? key, required this.event}) : super(key: key);
+  const EventDetailPage({super.key, required this.event});
 
   @override
   _EventDetailPageState createState() => _EventDetailPageState();
@@ -53,9 +53,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
     final querySnapshot =
         await collectionRef.where('title', isEqualTo: title).get();
 
-    querySnapshot.docChanges.forEach((change) {
+    for (var change in querySnapshot.docChanges) {
       change.doc.reference.delete();
-    });
+    }
 
     print('Events with title: $title deleted');
   }
@@ -74,7 +74,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     final querySnapshot =
         await collectionRef.where('title', isEqualTo: widget.event.title).get();
 
-    querySnapshot.docChanges.forEach((change) {
+    for (var change in querySnapshot.docChanges) {
       change.doc.reference.update({
         'title': title,
         'description': description,
@@ -84,7 +84,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         'endTime': endTime,
         'color': color,
       });
-    });
+    }
 
     print('Event edited');
   }
@@ -266,10 +266,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
               );
             },
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
         ],
         title: Text(
-          "Edit: " + widget.event.title,
+          "Edit: ${widget.event.title}",
           style: TextStyle(
             color: _appBarColor.computeLuminance() > 0.5
                 ? Colors.black54
@@ -356,7 +356,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 ),
               ),
               ListTile(
-                title: Text('Start Date'),
+                title: const Text('Start Date'),
                 trailing: Text(
                   DateFormat("dd/MM/yyyy").format(_selectedDate),
                 ),
@@ -375,7 +375,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 },
               ),
               ListTile(
-                title: Text('End Date'),
+                title: const Text('End Date'),
                 trailing: Text(
                   DateFormat("dd/MM/yyyy").format(_selectedEndDate),
                 ),
@@ -394,14 +394,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 },
               ),
               ListTile(
-                title: Text('Start Time'),
+                title: const Text('Start Time'),
                 trailing: Text(
                   _selectedTime.format(context),
                 ),
                 onTap: () => _pickStartTime(context),
               ),
               ListTile(
-                title: Text('End Time'),
+                title: const Text('End Time'),
                 trailing: Text(
                   _selectedEndTime.format(context),
                 ),
@@ -435,13 +435,13 @@ class _EventDetailPageState extends State<EventDetailPage> {
                 Navigator.of(context).pop();
                 deleteEventsByTitle(widget.event.title);
               },
-              child: const Icon(Icons.delete),
               style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
+                foregroundColor: Colors.black,
+                shape: const CircleBorder(),
+                backgroundColor: Colors.orange[500],
                 padding: const EdgeInsets.all(16.0),
-                primary: Colors.orange[500],
-                onPrimary: Colors.black,
               ),
+              child: const Icon(Icons.delete),
             ),
           ],
         ),

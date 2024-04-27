@@ -4,11 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/pages/course_page.dart';
 import 'package:smartapp_project24/pages/profiles_page.dart';
-import 'package:smartapp_project24/pages/tasks_page.dart';
 import 'package:smartapp_project24/pages/timetable_data.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -86,9 +85,9 @@ class _HomePageState extends State<HomePage> {
             label: 'Timetable',
           ),
           // NavigationDestination(
-          //   icon: Icon(Icons.menu_book_outlined),
-          //   selectedIcon: Icon(Icons.menu_book),
-          //   label: 'Events',
+          //   icon: Icon(Icons.notifications_outlined),
+          //   selectedIcon: Icon(Icons.notifications),
+          //   label: 'Notifcations',
           // ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),

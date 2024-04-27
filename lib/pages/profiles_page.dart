@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -75,6 +75,23 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onTap: () {
                 // Navigate to Profile page
+              },
+            ),
+            Divider(
+              color: Colors.grey[300],
+              thickness: 1,
+            ),
+            ListTile(
+              title: const Text('Notifications'),
+              trailing: CircleAvatar(
+                backgroundColor: Colors.orange[300],
+                child: Icon(
+                  Icons.notifications_active_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () {
+                //display notifications
               },
             ),
             Divider(

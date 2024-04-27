@@ -3,7 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
+
+import '../service/notifications_service.dart';
 
 class AllEventsPage extends StatefulWidget {
   const AllEventsPage({super.key});
@@ -56,7 +59,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
       // Handle potential errors during event fetching (e.g., network issues)
       print('Error fetching events: $error');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('An error occurred while fetching events.'),
         ),
       );
@@ -76,7 +79,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
     return Container(
       height:
           MediaQuery.of(context).size.height * 0.25, // Adjust height as needed
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
         color: Colors.white,
@@ -84,20 +87,20 @@ class _AllEventsPageState extends State<AllEventsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             'Event Options',
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('Cancel'),
+                child: const Text('Cancel'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -111,7 +114,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
                     ),
                   );
                 },
-                child: Text('Edit'),
+                child: const Text('Edit'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -122,14 +125,14 @@ class _AllEventsPageState extends State<AllEventsPage> {
                     // Handle potential errors during event deletion
                     print('Error deleting event: $error');
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content:
                             Text('An error occurred while deleting the event.'),
                       ),
                     );
                   }
                 },
-                child: Text('Delete'),
+                child: const Text('Delete'),
               ),
             ],
           ),
@@ -155,9 +158,9 @@ class _AllEventsPageState extends State<AllEventsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Events'),
+        title: const Text('All Events'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -166,7 +169,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
         children: [
           Expanded(
             child: events.isEmpty
-                ? Center(
+                ? const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -239,7 +242,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
                                   onPressed: () => _showEventOptions(event),
                                 ),
                                 tileColor: event.color.withOpacity(0.8),
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16.0,
                                   vertical: 8.0,
                                 ),
@@ -250,6 +253,31 @@ class _AllEventsPageState extends State<AllEventsPage> {
                     },
                   ),
           ),
+          ElevatedButton.icon(
+            onPressed: () {
+              // Show notification when button is pressed
+              NotificationService.showNotification(
+                id: 0,
+                title: 'Event Reminder',
+                body: 'You have an event coming up!',
+              );
+            },
+            icon: const Icon(Icons.notifications),
+            label: const Text('Show Notification'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              // Show notification when button is pressed
+              NotificationService.showEventNotification(
+                id: 1,
+                title: 'Event Reminder',
+                body: 'You have an event coming up!',
+                event: _selectedEvent!,
+              );
+            },
+            icon: const Icon(Icons.timer),
+            label: const Text('Show Notification'),
+          )
         ],
       ),
     );

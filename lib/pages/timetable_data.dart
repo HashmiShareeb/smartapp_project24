@@ -10,7 +10,7 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:smartapp_project24/pages/events/event_form.dart';
 
 class TimeTableData extends StatefulWidget {
-  const TimeTableData({Key? key}) : super(key: key);
+  const TimeTableData({super.key});
 
   @override
   _TimeTableDataState createState() => _TimeTableDataState();
@@ -36,7 +36,7 @@ class _TimeTableDataState extends State<TimeTableData> {
         .get()
         .then(
       (QuerySnapshot snapshot) {
-        snapshot.docs.forEach((doc) {
+        for (var doc in snapshot.docs) {
           List<CalendarEventData> events = snapshot.docs.map((doc) {
             DateTime date = (doc['startDate'] as Timestamp).toDate();
             DateTime startTime = (doc['startTime'] as Timestamp).toDate();
@@ -77,7 +77,7 @@ class _TimeTableDataState extends State<TimeTableData> {
           setState(() {
             events.addAll(events);
           });
-        });
+        }
       },
     ).catchError(
       (error) => print('Failed to fetch events: $error'),
@@ -234,7 +234,7 @@ class _TimeTableDataState extends State<TimeTableData> {
       body: FutureBuilder(
         future: fetchEventsFromFirestore(),
         builder: (context, snapshot) {
-          print("inside builder: " + snapshot.toString());
+          print("inside builder: $snapshot");
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -261,12 +261,11 @@ class _TimeTableDataState extends State<TimeTableData> {
 
                         final c = events.first;
 
-                        if (c != null &&
-                            c.endTime!.difference(c.startTime!).inHours == 1) {
+                        if (c.endTime!.difference(c.startTime!).inHours == 1) {
                           return Container(
                             width: double.infinity,
                             height: double.infinity,
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
                               color: c.color,
                               borderRadius: BorderRadius.circular(5),
@@ -299,7 +298,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                             child: Container(
                               width: double.infinity,
                               height: double.infinity,
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 color: c.color,
                                 borderRadius: BorderRadius.circular(5),
@@ -318,7 +317,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                                     children: [
                                       Text(
                                         c.title,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -326,14 +325,14 @@ class _TimeTableDataState extends State<TimeTableData> {
                                       ),
                                       Text(
                                         c.description ?? '',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
                                         '${DateFormat('HH:mm').format(c.startTime!)} - ${DateFormat('HH:mm').format(c.endTime ?? DateTime.now())}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
                                         ),

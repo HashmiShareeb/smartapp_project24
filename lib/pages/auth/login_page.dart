@@ -69,23 +69,23 @@ class _LoginPageState extends State<LoginPage> {
                   Icons.account_circle,
                   size: 50,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 const Text(
                   'Login Page',
                   style: TextStyle(fontSize: 24),
                 ),
-                SizedBox(height: 75),
+                const SizedBox(height: 75),
 
                 //!Email input
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: EmailField(emailController: _emailController),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 //!Password input
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: PasswordField(passwordController: _passwordController),
                 ),
                 const SizedBox(height: 20),
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: Size(double.infinity, 0),
+                      minimumSize: const Size(double.infinity, 0),
                     ),
                     onPressed: () {
                       //? Add login logic here

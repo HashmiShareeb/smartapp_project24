@@ -8,6 +8,8 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:smartapp_project24/pages/events/allevents_page.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 
+import 'service/notifications_service.dart';
+
 class CoursePage extends StatefulWidget {
   const CoursePage({super.key});
 
@@ -133,7 +135,7 @@ class _CoursePageState extends State<CoursePage> {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               height: 180,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -190,7 +192,7 @@ class _CoursePageState extends State<CoursePage> {
                           //settings: RouteSettings(arguments: events.toList()),
                         ),
                       );
-                      print('View all events ' + events.length.toString());
+                      print('View all events ${events.length}');
                     },
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(
@@ -225,7 +227,7 @@ class _CoursePageState extends State<CoursePage> {
                             size: 60,
                             color: Colors.lightBlue[800],
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Text(
                             'No events yet',
                             style: TextStyle(

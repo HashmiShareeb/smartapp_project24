@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:smartapp_project24/firebase_options.dart';
 import 'package:smartapp_project24/pages/auth/login_page.dart';
 
+import 'pages/service/notifications_service.dart';
+
 DateTime get _now => DateTime.now();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +19,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  fetchEventsFromFirestore();
+
+  final notificationService = NotificationService();
+  await NotificationService.init();
+
   runApp(MainApp(_events));
 }
 
 class MainApp extends StatelessWidget {
-  MainApp(List<CalendarEventData<Object?>> events);
+  const MainApp(List<CalendarEventData<Object?>> events, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -98,25 +105,29 @@ class MainApp extends StatelessWidget {
 
 //list of events from firestore
 List<CalendarEventData> fetchedEvents = [
-  CalendarEventData(
-    date: DateTime(2024, 4, 22),
-    title: "Frontend Development",
-    description: "Consult Portfolio",
-    startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
-    endTime: DateTime(_now.year, _now.month, _now.day, 12, 45),
-    color: Color.fromARGB(255, 15, 174, 23),
-  ),
+  // CalendarEventData(
+  //   date: fetchedEvents[0].date,
+  //   title: fetchedEvents[0].title,
+  //   description: fetchedEvents[0].description,
+  //   startTime: fetchedEvents[0].startTime,
+  //   endTime: fetchedEvents[0].endTime,
+  //   endDate: fetchedEvents[0].endDate,
+  //   color: fetchedEvents[0].color,
+  // ),
 ];
 
 void fetchEventsFromFirestore() async {
   // Fetch events from Firestore
+  if (FirebaseAuth.instance.currentUser == null) {
+    return null;
+  }
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
       .get();
 
   // Convert Firestore documents to CalendarEventData objects
   List<CalendarEventData> events = querySnapshot.docs.map((doc) {
-    DateTime date = (doc['date'] as Timestamp).toDate();
+    DateTime date = (doc['startDate'] as Timestamp).toDate();
     DateTime startTime = (doc['startTime'] as Timestamp).toDate();
     DateTime endTime = (doc['endTime'] as Timestamp).toDate();
     String title = doc['title'];
@@ -133,7 +144,8 @@ void fetchEventsFromFirestore() async {
     );
   }).toList();
 
-  fetchedEvents = events;
+  //fetchedEvents = events;
+  fetchedEvents.addAll(events);
 }
 
 List<CalendarEventData> _events = [

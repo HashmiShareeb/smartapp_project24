@@ -8,7 +8,7 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class EventFormPage extends StatefulWidget {
-  const EventFormPage({Key? key}) : super(key: key);
+  const EventFormPage({super.key});
 
   @override
   _EventFormPageState createState() => _EventFormPageState();
@@ -320,13 +320,11 @@ class _EventFormPageState extends State<EventFormPage> {
                 Navigator.pop(context);
                 addEvent();
               },
-              child: const Icon(Icons.add),
               style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
+                foregroundColor: Colors.white, shape: CircleBorder(), backgroundColor: Colors.orange[600],
                 padding: const EdgeInsets.all(16.0),
-                primary: Colors.orange[600],
-                onPrimary: Colors.white,
               ),
+              child: const Icon(Icons.add),
             ),
           ],
         ),
