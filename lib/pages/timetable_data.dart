@@ -255,7 +255,15 @@ class _TimeTableDataState extends State<TimeTableData> {
                           DateFormat('d MMMM yyyy').format(date),
                       startDay: WeekDays.monday,
                       onEventTap: (c, date) {
-                        print(c);
+                        // Implement callback when user taps on a cell.
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (context) => EventEditPage(event: c.first),
+                          ),
+                        );
+                        print(c.first);
                       },
                       startHour: 0,
                     ),

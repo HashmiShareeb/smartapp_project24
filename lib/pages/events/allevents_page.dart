@@ -1,9 +1,10 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:smartapp_project24/pages/events/event_edit.dart';
 
 class AllEventsPage extends StatefulWidget {
   const AllEventsPage({super.key});
@@ -88,7 +89,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
   Widget _buildEventOptionsSheet(BuildContext context) {
     return Container(
       height:
-          MediaQuery.of(context).size.height * 0.50, // Adjust height as needed
+          MediaQuery.of(context).size.height * 0.20, // Adjust height as needed
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
@@ -104,24 +105,10 @@ class _AllEventsPageState extends State<AllEventsPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 100.0),
+          const SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Implement logic to navigate to event edit page
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EventEditPage(event: _selectedEvent!),
-                    ),
-                  );
-                },
-                child: const Text('Edit'),
-              ),
               ElevatedButton(
                 onPressed: () async {
                   try {
@@ -225,7 +212,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
                             .map(
                               (event) => ListTile(
                                 title: Text(
-                                  event.title ?? 'My Event',
+                                  event.title,
                                   style: TextStyle(
                                     color: event.color.computeLuminance() > 0.5
                                         ? Colors.black54
@@ -244,17 +231,26 @@ class _AllEventsPageState extends State<AllEventsPage> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                leading: CircleAvatar(
-                                  backgroundColor: event.color,
-                                  child: Text(
-                                    event.title.isNotEmpty
-                                        ? event.title[0].toUpperCase()
-                                        : 'E',
-                                    style: TextStyle(
-                                      color:
-                                          event.color.computeLuminance() > 0.5
-                                              ? Colors.black54
-                                              : Colors.white,
+                                leading: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: event.color,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      event.title.isNotEmpty
+                                          ? event.title[0].toUpperCase()
+                                          : 'E',
+                                      style: TextStyle(
+                                        color:
+                                            event.color.computeLuminance() > 0.5
+                                                ? Colors.black45
+                                                : Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
                                 ),

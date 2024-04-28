@@ -45,6 +45,7 @@ class _EventEditPageState extends State<EventEditPage> {
     super.dispose();
   }
 
+  bool _isAllDay = false; // Added variable to track all-day status
   final db = FirebaseFirestore.instance;
 
   Future<void> deleteEventsByTitle(String title) async {
@@ -158,6 +159,23 @@ class _EventEditPageState extends State<EventEditPage> {
         _appBarColor = _selectedColor;
       });
     }
+  }
+
+  //?all day switch
+  void _toggleAllDay(bool value) {
+    setState(() {
+      if (_isAllDay != value) {
+        // Only update start and end times if the all-day status changes
+        _isAllDay = value;
+        if (_isAllDay) {
+          _selectedTime = TimeOfDay(hour: 0, minute: 0);
+          _selectedEndTime = TimeOfDay(hour: 23, minute: 59);
+        } else {
+          _selectedTime = TimeOfDay.fromDateTime(widget.event.startTime!);
+          _selectedEndTime = TimeOfDay.fromDateTime(widget.event.endTime!);
+        }
+      }
+    });
   }
 
   @override
@@ -328,26 +346,13 @@ class _EventEditPageState extends State<EventEditPage> {
               ),
               const SizedBox(height: 16),
               ListTile(
-                title: const Text('All Day'),
+                leading: Icon(Icons.event_available_sharp),
+                title: Text('All Day'),
                 trailing: Switch(
-                  value: _selectedEndDate != _selectedDate,
-                  onChanged: (value) {
-                    setState(() {
-                      if (value) {
-                        _selectedEndTime = TimeOfDay(
-                          hour: _selectedEndTime.hour + 24,
-                          minute: _selectedEndTime.minute,
-                        );
-                      } else {
-                        _selectedEndTime = TimeOfDay(
-                          hour: _selectedEndTime.hour % 24,
-                          minute: _selectedEndTime.minute,
-                        );
-                      }
-                    });
-                  },
-                  activeColor: _appBarColor,
-                  activeTrackColor: _appBarColor.withOpacity(0.5),
+                  value: _isAllDay,
+                  onChanged: (value) => _toggleAllDay(value),
+                  activeColor: _selectedColor,
+                  activeTrackColor: _selectedColor.withOpacity(0.5),
                 ),
               ),
               ListTile(

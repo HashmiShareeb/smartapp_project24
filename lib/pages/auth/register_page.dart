@@ -77,6 +77,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     'Register Now',
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(height: 16),
+                  const Text(
+                    'Hello there! Register now to get started!',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 20),
                   //!Name input
                   Padding(

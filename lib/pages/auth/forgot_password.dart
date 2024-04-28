@@ -75,14 +75,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 'Forgot Password',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 16),
+              const Text(
+                'Enter your email address to reset your password',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
+                    hintText: 'Email',
                     enabledBorder: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),

@@ -25,6 +25,8 @@ class _EventFormPageState extends State<EventFormPage> {
     minute: TimeOfDay.now().minute,
   );
 
+  
+
   bool _isAllDay = false; // Added variable to track all-day status
 
   final db = FirebaseFirestore.instance;

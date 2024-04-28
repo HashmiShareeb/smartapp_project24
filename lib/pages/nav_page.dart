@@ -47,6 +47,7 @@ class _NavPageState extends State<NavPage> {
                             TextButton(
                               onPressed: () {
                                 FirebaseAuth.instance.signOut();
+                                Navigator.pop(context);
                               },
                               child: const Text('Yes'),
                             ),

@@ -159,7 +159,7 @@ void fetchEventsFromFirestore() async {
 
 List<CalendarEventData> _events = [
   CalendarEventData(
-    date: DateTime(2024, 4, 22),
+    date: DateTime(2024, 4, 29),
     title: "Frontend Development",
     description: "Consult Portfolio",
     startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
@@ -167,7 +167,7 @@ List<CalendarEventData> _events = [
     color: Color.fromARGB(255, 15, 174, 23),
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 22),
+    date: DateTime(2024, 4, 29),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 15, 45),
     title: "Backend Development",
@@ -175,7 +175,7 @@ List<CalendarEventData> _events = [
     color: Color.fromARGB(255, 15, 174, 23),
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 24),
+    date: DateTime(2024, 4, 30),
     startTime: DateTime(_now.year, _now.month, _now.day, 8, 30),
     endTime: DateTime(_now.year, _now.month, _now.day, 12, 30),
     title: "Frontend Development",
@@ -183,7 +183,7 @@ List<CalendarEventData> _events = [
     color: Colors.lightBlue,
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 24),
+    date: DateTime(2024, 4, 30),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
     title: "SmartApp Development",
@@ -191,7 +191,7 @@ List<CalendarEventData> _events = [
     color: Colors.lightBlue,
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 25),
+    date: DateTime(2024, 5, 1),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
     title: "Backend Development",
@@ -199,11 +199,11 @@ List<CalendarEventData> _events = [
     color: Colors.lightBlue,
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 26),
+    date: DateTime(2024, 5, 2),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
     title: "User Experience Design",
-    description: "Slide Deck Presentation",
+    description: "Adobe After Effects",
     color: Colors.lightBlue,
   ),
 ];

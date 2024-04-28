@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-class TasksPage extends StatefulWidget {
-  const TasksPage({super.key});
+class CoursePage extends StatefulWidget {
+  const CoursePage({super.key});
 
   @override
-  State<TasksPage> createState() => _TasksPageState();
+  State<CoursePage> createState() => _CoursePageState();
 }
 
-class _TasksPageState extends State<TasksPage> {
+class _CoursePageState extends State<CoursePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('tasks'),
+        title: const Text('Courses'),
       ),
       body: Container(
         child: const Center(
-          child: Text('tasks Page'),
+          child: Text('classes'),
         ),
       ),
     );

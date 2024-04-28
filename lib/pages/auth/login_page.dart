@@ -100,6 +100,14 @@ class _LoginPageState extends State<LoginPage> {
                   'Login',
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 16),
+                const Text(
+                  'Welcome back! Please login to your account',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 20),
                 //!Email input
                 Padding(
@@ -107,8 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Enter your email',
+                      hintText: 'Email',
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
@@ -145,8 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Enter your password',
+                      hintText: 'Password',
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),

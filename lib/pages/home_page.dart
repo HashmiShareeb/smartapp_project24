@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:smartapp_project24/pages/events/allevents_page.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
-import 'package:smartapp_project24/pages/events/event_edit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -260,17 +259,25 @@ class _HomePageState extends State<HomePage> {
                                   : Colors.white70,
                             ),
                           ),
-                          leading: CircleAvatar(
-                            backgroundColor: event.color,
-                            child: Text(
-                              event.title.isNotEmpty
-                                  ? event.title[0].toUpperCase()
-                                  : 'E',
-                              style: TextStyle(
-                                color: event.color.computeLuminance() > 0.5
-                                    ? Colors.black45
-                                    : Colors.white,
-                                fontWeight: FontWeight.bold,
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: event.color,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                event.title.isNotEmpty
+                                    ? event.title[0].toUpperCase()
+                                    : 'E',
+                                style: TextStyle(
+                                  color: event.color.computeLuminance() > 0.5
+                                      ? Colors.black45
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
@@ -288,7 +295,8 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EventDetailPage(),
+                                builder: (context) =>
+                                    EventDetailPage(event: event),
                               ),
                             );
                           },
