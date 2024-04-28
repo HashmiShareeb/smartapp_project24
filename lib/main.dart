@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/firebase_options.dart';
 import 'package:smartapp_project24/pages/auth/login_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 DateTime get _now => DateTime.now();
 void main() async {
@@ -83,6 +84,19 @@ class MainApp extends StatelessWidget {
               ),
             ),
           ),
+          dialogTheme: DialogTheme(
+            backgroundColor: Colors.grey[100],
+            titleTextStyle: TextStyle(
+              color: Colors.lightBlue[900],
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            contentTextStyle: TextStyle(
+              color: Colors.black54,
+              fontSize: 16,
+            ),
+          ),
+          fontFamily: GoogleFonts.dmSans().fontFamily,
         ),
         themeMode: ThemeMode.system,
         scrollBehavior: ScrollBehavior().copyWith(

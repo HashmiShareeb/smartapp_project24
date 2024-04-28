@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:smartapp_project24/pages/events/event_detail.dart';
+import 'package:smartapp_project24/pages/events/event_edit.dart';
 
 class AllEventsPage extends StatefulWidget {
   const AllEventsPage({super.key});
@@ -72,10 +72,23 @@ class _AllEventsPageState extends State<AllEventsPage> {
     );
   }
 
+  Future<void> deleteEventsByTitle(String title) async {
+    final collectionRef = db.collection(
+        'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events');
+    final querySnapshot =
+        await collectionRef.where('title', isEqualTo: title).get();
+
+    for (var change in querySnapshot.docChanges) {
+      change.doc.reference.delete();
+    }
+
+    print('Events with title: $title deleted');
+  }
+
   Widget _buildEventOptionsSheet(BuildContext context) {
     return Container(
       height:
-          MediaQuery.of(context).size.height * 0.25, // Adjust height as needed
+          MediaQuery.of(context).size.height * 0.50, // Adjust height as needed
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
@@ -91,14 +104,10 @@ class _AllEventsPageState extends State<AllEventsPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 100.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
               ElevatedButton(
                 onPressed: () {
                   // Implement logic to navigate to event edit page
@@ -107,7 +116,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          EventDetailPage(event: _selectedEvent!),
+                          EventEditPage(event: _selectedEvent!),
                     ),
                   );
                 },
@@ -116,7 +125,23 @@ class _AllEventsPageState extends State<AllEventsPage> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    await deleteEvent(_selectedEvent!.title);
+                    // Implement logic to delete event from Firestore
+                    await deleteEventsByTitle(_selectedEvent!.title);
+
+                    // Update UI to reflect the deleted event (optional)
+                    final remainingEvents = events.where((eventList) =>
+                        !eventList.any(
+                            (event) => event.title == _selectedEvent!.title));
+                    setState(() {
+                      events = remainingEvents.toList();
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Event deleted successfully.'),
+                      ),
+                    );
+
                     Navigator.pop(context);
                   } catch (error) {
                     // Handle potential errors during event deletion
@@ -130,6 +155,10 @@ class _AllEventsPageState extends State<AllEventsPage> {
                   }
                 },
                 child: const Text('Delete'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
               ),
             ],
           ),

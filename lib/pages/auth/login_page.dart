@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/pages/auth/auth_page.dart';
@@ -55,14 +55,30 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
-        }
+        print(e.message);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text(e.message.toString()),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.orange),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
       }
 
-      formValidator();
+      //formValidator();
     }
   }
 
@@ -79,16 +95,12 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 100),
-                const Icon(
-                  Icons.account_circle,
-                  size: 55,
-                ),
+                const SizedBox(height: 200),
                 const Text(
-                  'Login Page',
+                  'Login',
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 75),
+                const SizedBox(height: 20),
                 //!Email input
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),

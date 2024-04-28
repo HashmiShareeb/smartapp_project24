@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +73,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             children: [
               const Text(
                 'Forgot Password',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Padding(

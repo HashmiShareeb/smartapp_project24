@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smartapp_project24/pages/auth/login_page.dart';
-import 'package:smartapp_project24/pages/home_page.dart';
+import 'package:smartapp_project24/pages/nav_page.dart';
 
 //?pagina om te controller ofdat de gebruiker is ingelogd of niet dan verwijzen naar home
 class MainPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return NavPage();
           } else {
             return LoginPage();
           }

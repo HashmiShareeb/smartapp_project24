@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartapp_project24/main.dart';
-import 'package:smartapp_project24/pages/events/event_detail.dart';
+import 'package:smartapp_project24/pages/events/event_edit.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:smartapp_project24/pages/events/event_form.dart';
 
@@ -57,22 +57,6 @@ class _TimeTableDataState extends State<TimeTableData> {
             );
           }).toList();
           print("added ${doc['title']}");
-          // events.add(
-          //   CalendarEventData(
-          //     date: (doc['startDate'] as Timestamp).toDate(),
-          //     startTime: (doc['startTime'] as Timestamp).toDate(),
-          //     endTime: (doc['endTime'] as Timestamp).toDate(),
-          //     title: doc['title'] as String,
-          //     description: doc['description'] as String,
-          //     color: Color(
-          //       int.parse(
-          //         doc['color'].toRadixString(16),
-          //         radix: 16,
-          //       ),
-          //     ),
-          //     // Add additional c properties as needed
-          //   ),
-          // );
 
           setState(() {
             events.addAll(events);
@@ -83,88 +67,6 @@ class _TimeTableDataState extends State<TimeTableData> {
       (error) => print('Failed to fetch events: $error'),
     );
   }
-
-  // Future<void> fetchEventsFromFirestore() async {
-  //   final events = <CalendarEventData<Object?>>[];
-
-  //   final user = FirebaseAuth.instance.currentUser;
-
-  //   if (user == null) {
-  //     return;
-  //   }
-
-  //   try {
-  //     final firestore = FirebaseFirestore.instance;
-  //     final eventDocs = await firestore
-  //         .collection(
-  //             'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
-  //         .get();
-
-  //     for (final doc in eventDocs.docs) {
-  //       final eventData = doc.data();
-  //       events.add(
-  //         CalendarEventData(
-  //           date: (eventData['startDate'] as Timestamp).toDate(),
-  //           startTime: (eventData['startTime'] as Timestamp).toDate(),
-  //           endTime: (eventData['endTime'] as Timestamp).toDate(),
-  //           title: eventData['title'] as String,
-  //           description: eventData['description'] as String,
-  //           color: Color(
-  //             int.parse(
-  //               doc['color'].toRadixString(16),
-  //               radix: 16,
-  //             ),
-  //           ),
-  //           // Add additional c properties as needed
-  //         ),
-  //       );
-  //     }
-  //   } catch (error) {
-  //     print('Error fetching events: $error');
-  //   }
-
-  //   setState(() {
-  //     events;
-  //   });
-  // }
-
-  // Stream<List<CalendarEventData>> fetchEventsFromFirestore() {
-  //   final user = FirebaseAuth.instance.currentUser;
-
-  //   if (user == null) {
-  //     return Stream.value([]); // Return empty list if no user is logged in
-  //   }
-
-  //   return db.collection('project_sm/${user.uid}/events').snapshots().map(
-  //     (snapshot) {
-  //       if (snapshot.docs.isEmpty) {
-  //         setState(() {
-  //           // Handle empty snapshot here
-  //           List<QueryDocumentSnapshot> db = snapshot.docs;
-  //         });
-  //       }
-
-  //       return snapshot.docs.map(
-  //         (doc) {
-  //           return CalendarEventData(
-  //             date: (doc['startDate'] as Timestamp).toDate(),
-  //             startTime: (doc['startTime'] as Timestamp).toDate(),
-  //             endTime: (doc['endTime'] as Timestamp).toDate(),
-  //             title: doc['title'] ?? '',
-  //             description: doc['description'] ?? '',
-  //             color: Color(
-  //               int.parse(
-  //                 doc['color'].toRadixString(16),
-  //                 radix: 16,
-  //               ),
-  //             ),
-  //             endDate: (doc['endDate'] as Timestamp).toDate(),
-  //           );
-  //         },
-  //       ).toList();
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +152,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EventDetailPage(event: c[0]),
+                            builder: (context) => EventEditPage(event: c[0]),
                           ),
                         );
                       },
@@ -290,8 +192,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      EventDetailPage(event: c),
+                                  builder: (context) => EventEditPage(event: c),
                                 ),
                               );
                             },
@@ -360,6 +261,8 @@ class _TimeTableDataState extends State<TimeTableData> {
                     ),
                     MonthView(
                       controller: c,
+                      headerStringBuilder: (date, {secondaryDate}) =>
+                          DateFormat('d MMMM yyyy').format(date),
                       dateStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('MMMM yyyy').format(date),
                       minMonth: DateTime(1990),
@@ -368,22 +271,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                       cellAspectRatio: 1,
                       onPageChange: (date, pageIndex) =>
                           print("$date, $pageIndex"),
-                      headerBuilder: (date) {
-                        return Container(
-                          color: Colors.lightBlue[50],
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              DateFormat('MMMM yyyy').format(date),
-                              style: TextStyle(
-                                color: Colors.lightBlue[800],
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+
                       showBorder: true,
                       // This callback will only work if cellBuilder is null.
                       onEventTap: (c, date) {
@@ -392,7 +280,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                           context,
                           MaterialPageRoute(
                             fullscreenDialog: true,
-                            builder: (context) => EventDetailPage(event: c),
+                            builder: (context) => EventEditPage(event: c),
                           ),
                         );
                         print(c);
