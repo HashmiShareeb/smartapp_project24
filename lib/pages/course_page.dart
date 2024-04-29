@@ -48,7 +48,7 @@ class _CoursePageState extends State<CoursePage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[600],
+                color: widget.event.color,
               ),
             ),
             SizedBox(height: 30),
@@ -75,7 +75,7 @@ class _CoursePageState extends State<CoursePage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Icon(Icons.access_time),
+                Icon(Icons.alarm_sharp),
                 Text(
                   DateFormat('HH:mm').format(widget.event.endTime!),
                   style: TextStyle(
@@ -86,11 +86,16 @@ class _CoursePageState extends State<CoursePage> {
                 ),
               ],
             ),
-            SizedBox(height: 100),
+            Divider(
+              color: Colors.grey[600],
+              thickness: 0.5,
+              height: 30,
+            ),
+            SizedBox(height: 50),
             Text(
               widget.event.description!,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey[600],
               ),

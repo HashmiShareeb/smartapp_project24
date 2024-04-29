@@ -32,42 +32,45 @@ class _TimeTableDataState extends State<TimeTableData> {
 
   Future<void> fetchEventsFromFirestore() async {
     // final events = CalenderControllerProvider.of(context).controller.
-    db
-        .collection(
-            'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
-        .get()
-        .then(
-      (QuerySnapshot snapshot) {
-        for (var doc in snapshot.docs) {
-          List<CalendarEventData> events = snapshot.docs.map((doc) {
-            DateTime date = (doc['startDate'] as Timestamp).toDate();
-            DateTime startTime = (doc['startTime'] as Timestamp).toDate();
-            DateTime endTime = (doc['endTime'] as Timestamp).toDate();
-            String title = doc['title'];
-            String description = doc['description'];
-            Color color = Color(doc['color']);
-            DateTime endDate = (doc['endDate'] as Timestamp).toDate();
 
-            return CalendarEventData(
-              date: date,
-              startTime: startTime,
-              endTime: endTime,
-              title: title,
-              description: description,
-              color: color,
-              endDate: endDate,
-            );
-          }).toList();
-          print("added ${doc['title']}");
+    if (FirebaseAuth.instance.currentUser == null) {
+      db
+          .collection(
+              'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+          .get()
+          .then(
+        (QuerySnapshot snapshot) {
+          for (var doc in snapshot.docs) {
+            List<CalendarEventData> events = snapshot.docs.map((doc) {
+              DateTime date = (doc['startDate'] as Timestamp).toDate();
+              DateTime startTime = (doc['startTime'] as Timestamp).toDate();
+              DateTime endTime = (doc['endTime'] as Timestamp).toDate();
+              String title = doc['title'];
+              String description = doc['description'];
+              Color color = Color(doc['color']);
+              DateTime endDate = (doc['endDate'] as Timestamp).toDate();
 
-          setState(() {
-            events.addAll(events);
-          });
-        }
-      },
-    ).catchError(
-      (error) => print('Failed to fetch events: $error'),
-    );
+              return CalendarEventData(
+                date: date,
+                startTime: startTime,
+                endTime: endTime,
+                title: title,
+                description: description,
+                color: color,
+                endDate: endDate,
+              );
+            }).toList();
+            print("added ${doc['title']}");
+
+            setState(() {
+              events.addAll(events);
+            });
+          }
+        },
+      ).catchError(
+        (error) => print('Failed to fetch events: $error'),
+      );
+    }
   }
 
   @override

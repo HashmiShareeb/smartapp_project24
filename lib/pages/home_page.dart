@@ -28,9 +28,8 @@ class _HomePageState extends State<HomePage> {
       startTime: DateTime(DateTime.now().year, 4, 30, 8, 30),
       endTime: DateTime(DateTime.now().year, 4, 30, 12, 30),
       color: Colors.blue,
-      event: 'React.js',
       description:
-          'Learn how to build user interfaces with React.js and tailwindcss ',
+          'Learn how to build user interfaces with React.js and tailwindcss and cross-platform applications, this means that the application can be used on any device.',
     ),
     CalendarEventData(
       title: 'Backend Development',
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
       endTime: DateTime(DateTime.now().year, 4, 30, 17, 30),
       color: Colors.orange,
       description:
-          'Flutter is a UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase. Learn how to build apps with Flutter.',
+          'Flutter is a UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase. Learn how to build apps with Flutter by using hybrid technologies like Firebase, firestore and more .',
     ),
     CalendarEventData(
       title: 'UI/UX Design',
@@ -55,7 +54,8 @@ class _HomePageState extends State<HomePage> {
       startTime: DateTime(DateTime.now().year, 4, 30, 13, 30),
       endTime: DateTime(DateTime.now().year, 4, 30, 17, 30),
       color: Colors.purple,
-      description: 'Learn how to design user interfaces',
+      description:
+          'Learn how to design user interfaces, Enhance your skills in user interface (UI) design by learning about design principles, color theory, typography, and layout. Gain knowledge in using design software such as Sketch, Figma, or Adobe XD to create wireframes, prototypes, and high-fidelity designs',
     ),
   ];
 

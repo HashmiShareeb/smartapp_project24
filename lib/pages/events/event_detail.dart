@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -36,7 +34,7 @@ class EventDetailPage extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,17 +44,17 @@ class EventDetailPage extends StatelessWidget {
               'Event Title:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.lightBlue[800],
+                fontSize: 18,
+                color: Colors.lightBlue[900],
               ),
             ),
             SizedBox(height: 10),
             Text(
               event.title,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 24,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: event.color,
               ),
             ),
             SizedBox(height: 50),
@@ -64,15 +62,15 @@ class EventDetailPage extends StatelessWidget {
               'Event Description:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.lightBlue[800],
+                fontSize: 18,
+                color: Colors.lightBlue[900],
               ),
             ),
             SizedBox(height: 10),
             Text(
               event.description!,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey[600],
               ),
@@ -82,15 +80,15 @@ class EventDetailPage extends StatelessWidget {
               'Start Time:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.lightBlue[800],
+                fontSize: 18,
+                color: Colors.lightBlue[900],
               ),
             ),
             SizedBox(height: 10),
             Text(
               DateFormat.yMMMMd().add_Hm().format(event.startTime!),
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,
               ),
@@ -100,15 +98,15 @@ class EventDetailPage extends StatelessWidget {
               'End Time:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.lightBlue[800],
+                fontSize: 18,
+                color: Colors.lightBlue[900],
               ),
             ),
             SizedBox(height: 10),
             Text(
               DateFormat.yMMMMd().add_Hm().format(event.endTime!),
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,
               ),

@@ -29,38 +29,35 @@ class _AllEventsPageState extends State<AllEventsPage> {
   Future<void> _fetchEvents() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      final snapshot = await db
-          .collection('project_sm/${user!.uid}/events')
-          .orderBy('startDate')
-          .get();
-      final fetchedEvents = snapshot.docs.map(
-        (doc) => CalendarEventData(
-          title: doc['title'],
-          description: doc['description'],
-          date: doc['startDate'].toDate(),
-          endDate: doc['endDate'].toDate(),
-          color: Color(doc['color']),
-          startTime: doc['startTime'].toDate(),
-          endTime: doc['endTime'].toDate(),
-        ),
-      );
+      if (user != null) {
+        final snapshot = await db
+            .collection('project_sm/${user.uid}/events')
+            .orderBy('startDate')
+            .get();
+        final fetchedEvents = snapshot.docs.map(
+          (doc) => CalendarEventData(
+            title: doc['title'],
+            description: doc['description'],
+            date: doc['startDate'].toDate(),
+            endDate: doc['endDate'].toDate(),
+            color: Color(doc['color']),
+            startTime: doc['startTime'].toDate(),
+            endTime: doc['endTime'].toDate(),
+          ),
+        );
 
-      final groupedEvents = groupBy(
-        fetchedEvents.toList(), // Ensure events is converted to a list
-        (CalendarEventData event) => event.date,
-      );
+        final groupedEvents = groupBy(
+          fetchedEvents.toList(),
+          (CalendarEventData event) => event.date,
+        );
 
-      setState(() {
-        events = groupedEvents.values.toList();
-      });
+        setState(() {
+          events = groupedEvents.values.toList();
+        });
+      }
     } catch (error) {
-      // Handle potential errors during event fetching (e.g., network issues)
       print('Error fetching events: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred while fetching events.'),
-        ),
-      );
+      // Error handling
     }
   }
 
@@ -84,6 +81,8 @@ class _AllEventsPageState extends State<AllEventsPage> {
     }
 
     print('Events with title: $title deleted');
+
+    await _fetchEvents();
   }
 
   Widget _buildEventOptionsSheet(BuildContext context) {
@@ -289,12 +288,6 @@ class _AllEventsPageState extends State<AllEventsPage> {
                   ),
           ),
         ],
-      ),
-      //floating button to refetch events
-      floatingActionButton: FloatingActionButton(
-        onPressed: _fetchEvents,
-        child: const Icon(Icons.refresh),
-        shape: CircleBorder(),
       ),
     );
   }
