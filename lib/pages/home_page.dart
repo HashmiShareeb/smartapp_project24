@@ -20,30 +20,42 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<CalendarEventData> events = [];
+
   final List<CalendarEventData> hardcodedEvents = [
     CalendarEventData(
       title: 'Frontend Development',
-      date: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(hours: 1)),
+      date: DateTime(DateTime.now().year, 4, 23),
+      startTime: DateTime(DateTime.now().year, 4, 30, 8, 30),
+      endTime: DateTime(DateTime.now().year, 4, 30, 12, 30),
       color: Colors.blue,
+      event: 'React.js',
+      description:
+          'Learn how to build user interfaces with React.js and tailwindcss ',
     ),
     CalendarEventData(
       title: 'Backend Development',
-      date: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(hours: 1)),
+      date: DateTime(DateTime.now().year, 4, 24),
+      startTime: DateTime(DateTime.now().year, 4, 30, 13, 30),
+      endTime: DateTime(DateTime.now().year, 4, 30, 18, 00),
       color: Colors.green,
+      description: 'Learn how to build APIs with C# .NET',
     ),
     CalendarEventData(
       title: 'Smartapp Development',
-      date: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(hours: 1)),
+      date: DateTime(DateTime.now().year, 4, 25),
+      startTime: DateTime(DateTime.now().year, 4, 30, 13, 30),
+      endTime: DateTime(DateTime.now().year, 4, 30, 17, 30),
       color: Colors.orange,
+      description:
+          'Flutter is a UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase. Learn how to build apps with Flutter.',
     ),
     CalendarEventData(
       title: 'UI/UX Design',
-      date: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(hours: 1)),
+      date: DateTime(DateTime.now().year, 4, 26),
+      startTime: DateTime(DateTime.now().year, 4, 30, 13, 30),
+      endTime: DateTime(DateTime.now().year, 4, 30, 17, 30),
       color: Colors.purple,
+      description: 'Learn how to design user interfaces',
     ),
   ];
 
@@ -59,6 +71,7 @@ class _HomePageState extends State<HomePage> {
     db
         .collection(
             'project_sm/${FirebaseAuth.instance.currentUser!.uid}/events')
+        .orderBy('startDate', descending: true)
         .get()
         .then(
       (QuerySnapshot querySnapshot) {
@@ -169,31 +182,16 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
                 children: [
-                  lessonsCard(
-                    hardcodedEvents[0].title,
-                    'Web Development',
-                    hardcodedEvents[0].color,
-                  ),
-                  lessonsCard(
-                    hardcodedEvents[1].title,
-                    'flutter project',
-                    hardcodedEvents[1].color,
-                  ),
-                  lessonsCard(
-                    hardcodedEvents[2].title,
-                    'C# .NET',
-                    hardcodedEvents[2].color,
-                  ),
-                  lessonsCard(
-                    hardcodedEvents[3].title,
-                    'Interface Design',
-                    hardcodedEvents[3].color,
-                  ),
+                  for (int i = 0; i < hardcodedEvents.length; i++)
+                    lessonsCard(
+                      hardcodedEvents[i % hardcodedEvents.length].title,
+                      hardcodedEvents[i % hardcodedEvents.length].description!,
+                      hardcodedEvents[i % hardcodedEvents.length].color,
+                    ),
                 ],
               ),
             ),
             //? Events list view
-
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 15.0,
@@ -201,7 +199,7 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: [
                   Text(
-                    'Planned Events',
+                    'Recent Events',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 18,
@@ -348,13 +346,15 @@ class _HomePageState extends State<HomePage> {
   Widget lessonsCard(String className, String description, Color color) {
     return Container(
       width: 260,
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+      ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,27 +369,21 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 20,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: TextStyle(
-                color: color.computeLuminance() > 0.5
-                    ? Colors.black54
-                    : Colors.white,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
+                print('Navigating to $className');
                 // Add navigation logic here
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CoursePage(event: hardcodedEvents[0]),
+                    builder: (context) => CoursePage(
+                      event: hardcodedEvents.firstWhere(
+                        (element) => element.title == className,
+                      ),
+                    ),
                   ),
                 );
-                print('Navigating to $className');
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(color),
