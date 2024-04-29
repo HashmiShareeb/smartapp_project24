@@ -210,63 +210,76 @@ class _AllEventsPageState extends State<AllEventsPage> {
                       return Column(
                         children: events[index]
                             .map(
-                              (event) => ListTile(
-                                title: Text(
-                                  event.title,
-                                  style: TextStyle(
-                                    color: event.color.computeLuminance() > 0.5
-                                        ? Colors.black54
-                                        : Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                  ),
+                              (event) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                  horizontal: 12.0,
                                 ),
-                                subtitle: Text(
-                                  event.description!,
-                                  style: TextStyle(
-                                    color: event.color.computeLuminance() > 0.5
-                                        ? Colors.black54
-                                        : Colors.white70,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500,
+                                child: ListTile(
+                                  title: Text(
+                                    event.title,
+                                    style: TextStyle(
+                                      color:
+                                          event.color.computeLuminance() > 0.5
+                                              ? Colors.black54
+                                              : Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                    ),
                                   ),
-                                ),
-                                leading: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: event.color,
-                                    borderRadius: BorderRadius.circular(8),
+                                  subtitle: Text(
+                                    event.description!,
+                                    style: TextStyle(
+                                      color:
+                                          event.color.computeLuminance() > 0.5
+                                              ? Colors.black54
+                                              : Colors.white70,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      event.title.isNotEmpty
-                                          ? event.title[0].toUpperCase()
-                                          : 'E',
-                                      style: TextStyle(
-                                        color:
-                                            event.color.computeLuminance() > 0.5
-                                                ? Colors.black45
-                                                : Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                  leading: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: event.color,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        event.title.isNotEmpty
+                                            ? event.title[0].toUpperCase()
+                                            : 'E',
+                                        style: TextStyle(
+                                          color:
+                                              event.color.computeLuminance() >
+                                                      0.5
+                                                  ? Colors.black45
+                                                  : Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.more_vert_rounded,
-                                    color: event.color.computeLuminance() > 0.5
-                                        ? Colors.black54
-                                        : Colors.white,
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.more_vert_rounded,
+                                      color:
+                                          event.color.computeLuminance() > 0.5
+                                              ? Colors.black54
+                                              : Colors.white,
+                                    ),
+                                    onPressed: () => _showEventOptions(event),
                                   ),
-                                  onPressed: () => _showEventOptions(event),
-                                ),
-                                tileColor: event.color.withOpacity(0.8),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 8.0,
+                                  tileColor: event.color.withOpacity(0.6),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                    vertical: 8.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
                                 ),
                               ),
                             )
@@ -276,6 +289,12 @@ class _AllEventsPageState extends State<AllEventsPage> {
                   ),
           ),
         ],
+      ),
+      //floating button to refetch events
+      floatingActionButton: FloatingActionButton(
+        onPressed: _fetchEvents,
+        child: const Icon(Icons.refresh),
+        shape: CircleBorder(),
       ),
     );
   }

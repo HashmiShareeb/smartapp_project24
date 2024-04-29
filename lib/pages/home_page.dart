@@ -1,10 +1,13 @@
 // ignore_for_file: avoid_print
 
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:smartapp_project24/pages/course_page.dart';
 import 'package:smartapp_project24/pages/events/allevents_page.dart';
 import 'package:smartapp_project24/pages/events/event_detail.dart';
 
@@ -17,6 +20,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<CalendarEventData> events = [];
+  final List<CalendarEventData> hardcodedEvents = [
+    CalendarEventData(
+      title: 'Frontend Development',
+      date: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(hours: 1)),
+      color: Colors.blue,
+    ),
+    CalendarEventData(
+      title: 'Backend Development',
+      date: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(hours: 1)),
+      color: Colors.green,
+    ),
+    CalendarEventData(
+      title: 'Smartapp Development',
+      date: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(hours: 1)),
+      color: Colors.orange,
+    ),
+    CalendarEventData(
+      title: 'UI/UX Design',
+      date: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(hours: 1)),
+      color: Colors.purple,
+    ),
+  ];
 
   final db = FirebaseFirestore.instance;
 
@@ -141,24 +170,24 @@ class _HomePageState extends State<HomePage> {
                     horizontal: 15.0, vertical: 10.0),
                 children: [
                   lessonsCard(
-                    'Frontend',
+                    hardcodedEvents[0].title,
                     'Web Development',
-                    Colors.lightBlue,
+                    hardcodedEvents[0].color,
                   ),
                   lessonsCard(
-                    'Smartapp',
+                    hardcodedEvents[1].title,
                     'flutter project',
-                    Colors.blue,
+                    hardcodedEvents[1].color,
                   ),
                   lessonsCard(
-                    'Backend',
+                    hardcodedEvents[2].title,
                     'C# .NET',
-                    Colors.deepPurple,
+                    hardcodedEvents[2].color,
                   ),
                   lessonsCard(
-                    'UI/UX',
+                    hardcodedEvents[3].title,
                     'Interface Design',
-                    Colors.deepOrange,
+                    hardcodedEvents[3].color,
                   ),
                 ],
               ),
@@ -231,80 +260,82 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: events.length > 3 ? 3 : events.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      itemBuilder: (context, index) {
-                        final event = events[index];
-                        return ListTile(
-                          title: Text(
-                            event.title ?? 'My Event',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: event.color.computeLuminance() > 0.5
-                                  ? Colors.black54
-                                  : Colors.white,
+                  : Scrollbar(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: events.length > 2 ? 2 : events.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        itemBuilder: (context, index) {
+                          final event = events[index];
+                          return ListTile(
+                            title: Text(
+                              event.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: event.color.computeLuminance() > 0.5
+                                    ? Colors.black54
+                                    : Colors.white,
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            '${DateFormat('hh:mm a').format(event.startTime!)} - ${DateFormat('hh:mm a').format(event.endTime!)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: event.color.computeLuminance() > 0.5
-                                  ? Colors.black54
-                                  : Colors.white70,
+                            subtitle: Text(
+                              '${event.startTime != null && event.endTime != null ? DateFormat('hh:mm a').format(event.startTime!) + ' - ' + DateFormat('hh:mm a').format(event.endTime!) : ''}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: event.color.computeLuminance() > 0.5
+                                    ? Colors.black54
+                                    : Colors.white70,
+                              ),
                             ),
-                          ),
-                          leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: event.color,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                event.title.isNotEmpty
-                                    ? event.title[0].toUpperCase()
-                                    : 'E',
-                                style: TextStyle(
-                                  color: event.color.computeLuminance() > 0.5
-                                      ? Colors.black45
-                                      : Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                            leading: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: event.color,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  event.title.isNotEmpty
+                                      ? event.title[0].toUpperCase()
+                                      : 'E',
+                                  style: TextStyle(
+                                    color: event.color.computeLuminance() > 0.5
+                                        ? Colors.black45
+                                        : Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: event.color.computeLuminance() > 0.5
-                                ? Colors.black54
-                                : Colors.white,
-                            size: 20,
-                          ),
-                          tileColor: event.color.withOpacity(0.6),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EventDetailPage(event: event),
-                              ),
-                            );
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        );
-                      },
+                            trailing: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: event.color.computeLuminance() > 0.5
+                                  ? Colors.black54
+                                  : Colors.white,
+                              size: 20,
+                            ),
+                            tileColor: event.color.withOpacity(0.6),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EventDetailPage(event: event),
+                                ),
+                              );
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          );
+                        },
+                      ),
                     ),
             ),
           ],
@@ -352,6 +383,12 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 // Add navigation logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CoursePage(event: hardcodedEvents[0]),
+                  ),
+                );
                 print('Navigating to $className');
               },
               style: ButtonStyle(

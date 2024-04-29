@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -339,6 +341,7 @@ class _EventEditPageState extends State<EventEditPage> {
                   fillColor: Colors.white,
                   filled: true,
                 ),
+                //if event is not from read only, remove the validation for description
                 maxLines: null,
                 validator: (value) {
                   return null; // Remove the validation for description

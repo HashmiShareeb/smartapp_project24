@@ -1,5 +1,7 @@
 // timetable_page.dart or your page file
 
+// ignore_for_file: invalid_return_type_for_catch_error, library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +149,7 @@ class _TimeTableDataState extends State<TimeTableData> {
                     DayView(
                       controller: c,
                       dateStringBuilder: (date, {secondaryDate}) =>
-                          DateFormat('d MMMM yyyy').format(date),
+                          DateFormat('EEEE, d MMMM yyyy').format(date),
                       onEventTap: (c, date) {
                         Navigator.push(
                           context,
@@ -255,22 +257,19 @@ class _TimeTableDataState extends State<TimeTableData> {
                           DateFormat('d MMMM yyyy').format(date),
                       startDay: WeekDays.monday,
                       onEventTap: (c, date) {
-                        // Implement callback when user taps on a cell.
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (context) => EventEditPage(event: c.first),
+                            builder: (context) => EventEditPage(event: c[0]),
                           ),
                         );
-                        print(c.first);
                       },
                       startHour: 0,
                     ),
                     MonthView(
                       controller: c,
                       headerStringBuilder: (date, {secondaryDate}) =>
-                          DateFormat('d MMMM yyyy').format(date),
+                          DateFormat(' MMMM yyyy').format(date),
                       dateStringBuilder: (date, {secondaryDate}) =>
                           DateFormat('MMMM yyyy').format(date),
                       minMonth: DateTime(1990),

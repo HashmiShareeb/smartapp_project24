@@ -97,6 +97,13 @@ class MainApp extends StatelessWidget {
             ),
           ),
           fontFamily: GoogleFonts.dmSans().fontFamily,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.orange, // 30% Accent - Button background
+              ),
+            ),
+          ),
         ),
         themeMode: ThemeMode.system,
         scrollBehavior: ScrollBehavior().copyWith(
@@ -159,7 +166,7 @@ void fetchEventsFromFirestore() async {
 
 List<CalendarEventData> _events = [
   CalendarEventData(
-    date: DateTime(2024, 4, 29),
+    date: DateTime(2024, 4, 22),
     title: "Frontend Development",
     description: "Consult Portfolio",
     startTime: DateTime(_now.year, _now.month, _now.day, 10, 45),
@@ -167,7 +174,7 @@ List<CalendarEventData> _events = [
     color: Color.fromARGB(255, 15, 174, 23),
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 29),
+    date: DateTime(2024, 4, 22),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 15, 45),
     title: "Backend Development",
@@ -175,7 +182,7 @@ List<CalendarEventData> _events = [
     color: Color.fromARGB(255, 15, 174, 23),
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 30),
+    date: DateTime(2024, 4, 24),
     startTime: DateTime(_now.year, _now.month, _now.day, 8, 30),
     endTime: DateTime(_now.year, _now.month, _now.day, 12, 30),
     title: "Frontend Development",
@@ -183,7 +190,7 @@ List<CalendarEventData> _events = [
     color: Colors.lightBlue,
   ),
   CalendarEventData(
-    date: DateTime(2024, 4, 30),
+    date: DateTime(2024, 4, 23),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
     title: "SmartApp Development",
@@ -191,7 +198,7 @@ List<CalendarEventData> _events = [
     color: Colors.lightBlue,
   ),
   CalendarEventData(
-    date: DateTime(2024, 5, 1),
+    date: DateTime(2024, 5, 24),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
     title: "Backend Development",
@@ -199,11 +206,35 @@ List<CalendarEventData> _events = [
     color: Colors.lightBlue,
   ),
   CalendarEventData(
-    date: DateTime(2024, 5, 2),
+    date: DateTime(2024, 5, 25),
+    startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
+    title: "User Experience Design",
+    description: "Adobe After Effects",
+    color: Color.fromARGB(255, 15, 174, 23),
+  ),
+  CalendarEventData(
+    date: DateTime(2024, 5, 26),
     startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
     endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
     title: "User Experience Design",
     description: "Adobe After Effects",
     color: Colors.lightBlue,
+  ),
+  CalendarEventData(
+    date: DateTime(2024, 5, 29),
+    startTime: DateTime(_now.year, _now.month, _now.day, 13, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 17, 45),
+    title: "SmartApp Development",
+    description: "Presentation Flutter Project",
+    color: const Color.fromARGB(255, 154, 20, 10),
+  ),
+  CalendarEventData(
+    date: DateTime(2024, 5, 2),
+    startTime: DateTime(_now.year, _now.month, _now.day, 8, 45),
+    endTime: DateTime(_now.year, _now.month, _now.day, 14, 45),
+    title: "Backend Development",
+    description: "Exams .NET and dapr",
+    color: const Color.fromARGB(255, 154, 20, 10),
   ),
 ];
